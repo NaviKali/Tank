@@ -1,14 +1,14 @@
 {
-    "name": "ll/tank",
-    "description": "Tank框架是一个由PHP后端语言操作MongoDB数据库的框架。",
+    "name": "tankphp/tank",
+    "description": "Tank框架是由PHP后端语言操作MongoDB数据库的框架。",
     "autoload": {
         "psr-4": {
-            "Ll\\Tank\\": "src/"
+            "Tankphp\\Tank\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "ll"
+            "name": "tankphp"
         }
     ],
     "minimum-stability": "dev",
