@@ -1,0 +1,10 @@
+{
+  "ROOT": "C:/phpstudy_pro/WWW/TK/api",
+  "UPLOADURL": "C:/phpstudy_pro/WWW/TK/api/public/upload",
+  "COOKIE": {
+    "UUID": {
+      "NAME": "UUID",
+      "TIME": 100000
+    }
+  }
+}
