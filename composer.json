@@ -1,6 +1,5 @@
 {
     "name": "tankphp/tank",
-    "description": "Tank框架是由PHP后端语言操作MongoDB数据库的框架。",
     "autoload": {
         "psr-4": {
             "Tankphp\\Tank\\": "src/"
