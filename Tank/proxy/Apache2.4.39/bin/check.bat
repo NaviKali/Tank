@@ -1,2 +1,0 @@
-httpd.exe
-pause > nul
