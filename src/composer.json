@@ -1,0 +1,15 @@
+{
+    "name": "tankphp/tank",
+    "autoload": {
+        "psr-4": {
+            "Tankphp\\Tank\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tankphp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
