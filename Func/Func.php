@@ -4,7 +4,7 @@ namespace tank\Func;
 use tank\MG\MG;
 use tank\Request\Request;
 use tank\Tool\Tool as Tool;
-
+use tank\App\App;
 use function tank\{Error, Success};
 
 /**

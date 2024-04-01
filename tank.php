@@ -8,6 +8,7 @@ namespace tank;
 use config\SQL;
 use tank\Tool\Tool as Tool;
 use tank\Func\Func as Func;
+use tank\Request\Request;
 
 /**
  * 获取当前路径执行函数
@@ -39,7 +40,7 @@ if (!function_exists("Weclome")) {
         function Weclome()
         {
                 header("Content-Type:text/html");
-                include(getRoot() . '/public/then/weclome.html');
+                include (getRoot() . '/public/then/weclome.html');
         }
 }
 /**
@@ -226,7 +227,7 @@ if (!function_exists("VerificationInclude")) {
          */
         function VerificationInclude(string $PHPName)
         {
-                return require(getRoot() . "app/verification/$PHPName.php");
+                return require (getRoot() . "app/verification/$PHPName.php");
         }
 }
 /**
@@ -263,3 +264,34 @@ if (!function_exists("SQLConnect")) {
                 };
         }
 }
+/**
+ * 全局错误配置
+ * TODO抑制所有错误，提示Tank的错误提示内容。
+ */
+if (!function_exists("OverallSituationErrorConfig")) {
+        function OverallSituationErrorConfig()
+        {
+                error_reporting(0);
+                set_error_handler(function ($data, $content, $url, $line) {
+                        if ($data != 0) {
+                                if (empty ($content)) {
+                                        $content = "暂时没有错误提示内容!";
+                                }
+                                \tank\Error\error::create($content, $url, $line);
+                        } else
+                                \tank\Error\error::create("当前错误出现问题!", __FILE__, __LINE__);
+                });
+        }
+}
+/**
+ * 获取签名
+ * TODO当调用APP类时会自动生成请求头签名。
+ */
+if(!function_exists("getAutograph"))
+{
+        function getAutograph()
+        {
+                return apache_response_headers()["Autograph"];
+        }
+}
+

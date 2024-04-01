@@ -3,9 +3,26 @@ namespace tank;
 
 use tank\Tool\Tool;
 use tank\MG\MG;
+use tank\App\App;
 
 class BaseController
 {
+        /**
+         * 实例APP
+         */
+        protected App $app;
+        /**
+         * 快速当前类实例
+         */
+        public static mixed $FastCurrentNewClass;
+        /**
+         * APP场景
+         */
+        public function __construct()
+        {
+                $this->app = (new App(get_class($this)));
+                self::$FastCurrentNewClass = (get_class($this));
+        }
         /**
          * 密码验证场景规则
          * TODO常规的密码正则表达式验证法，用来严格验证密码类型。
@@ -33,7 +50,7 @@ class BaseController
          */
         public static function VerIsNull(string|array $data, \Closure $success, \Closure $error): void
         {
-                 !empty($data) || $data == [] ? $error() : $success($data);
+                !empty($data) || $data == [] ? $error() : $success($data);
         }
         /**
          * 字段相连表
@@ -97,6 +114,9 @@ class BaseController
          */
         public static function UnSet(object $data, array|string $field): mixed
         {
+                /**
+                 * 这里不采用PHP自带的unset，是为了避免字段消失。
+                 */
                 if (is_array($field)) {
                         for ($i = 0; $i < count($field); $i++) {
                                 $data = self::UnSet($data, $field[$i]);
