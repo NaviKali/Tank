@@ -4,6 +4,8 @@ namespace tank\Web;
 
 use tank\Error\error as Error;
 use tank\Attribute\Attribute;
+use tank\Func\Func;
+use tank\Tool\Tool;
 
 class http
 {
@@ -163,6 +165,52 @@ class http
         {
                 $Dir = str_replace(__NAMESPACE__, "", $Dir);
                 return $Dir;
+        }
+
+        /**
+         * 路由虚幻
+         * TODO生成随机GET请求参数[障眼法]
+         * @return string
+         */
+        public static function RouterUnreal(): string
+        {
+                $before = self::MakeRouterParams(isStartUnreal: true);
+                return $before;
+        }
+        /**
+         * 路由后缀参数生成
+         * @access public
+         * @param array $data 参数+值 键值对 选填
+         * @param bool $isStartUnreal 是否开启虚幻模式 选填 默认为 false
+         * @return string
+         */
+        public static function MakeRouterParams(array $data = [], bool $isStartUnreal = false): string
+        {
+                $str = '';
+                if (!$isStartUnreal) {
+
+                        foreach ($data as $k => $v) {
+                                $str .= "$k=$v&";
+                        }
+                } else {
+
+                        $length = rand(5, 10);
+                        $str = Tool::Salt(time());
+                        $url = "";
+                        for ($i = 0; $i < $length; $i++) {
+                                $keyStart = rand(1, 5);
+                                $valueStart = rand(6, 15);
+                                $StartStr = substr($str, $keyStart, $valueStart);
+                                $keyEnd = rand(1, 5);
+                                $valueEnd = rand(6, 15);
+                                $EndStr = substr($str, $keyEnd, $valueEnd);
+                                $url .= "$StartStr=$EndStr&";
+                        }
+                }
+
+                $end = $isStartUnreal ? $url . "isStartUnreal=true" : substr($str, 0, strlen($str) - 1);
+                return "?" . $end;
+
         }
 
 }
