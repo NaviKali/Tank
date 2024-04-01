@@ -32,6 +32,26 @@ class Tool
         /**Tool工具类的命名空间 */
         public static $Tool_NAMESPACE = __NAMESPACE__;
         /**
+         * 生成合同
+         * @static
+         * @param array $wh 宽和高 必填
+         * @param string $title 标题 必填
+         * @param string $content 内容 必填
+         */
+        public static function MakeContract(array $wh,string $title,string $content)
+        {
+                header("Content-type: image/jpg");
+                $img = imagecreatetruecolor($wh[0],$wh[1]);
+                $backgroundColor = imagecolorallocate($img,255,255,255);
+                $textColor = imagecolorallocate($img,0,0,0);
+                imagefill($img, 0, 0, $backgroundColor);
+                imagestring($img,10,20,20,$title,$textColor);
+                imagestring($img,2,40,60,$content,$textColor);
+                imagestring($img,2,$wh[0]-200,$wh[1]-60,"Place Write This:",$textColor);
+                imagejpeg($img);
+                imagedestroy($img);
+        }
+        /**
          * 参数不能为空值
          * @author L
          * @access public
