@@ -5,7 +5,7 @@
 namespace tank\Env;
 
 use function tank\getRoot;
-
+use tank\Attribute\Attribute;
 
 define("DEFAULT_GET", 100);
 class env
@@ -21,6 +21,7 @@ class env
      */
     public function __construct(string $envfile = "tank")
     {
+        (new Attribute("FUNCTION","环境变量是不可缺少的东西。"));
         if (file_exists(getRoot() . "env/{$envfile}.env")) {
             $env = file(getRoot() . "env/{$envfile}.env");
             self::$EnvList = $env;
@@ -36,6 +37,7 @@ class env
      */
     public function get(string $key = DEFAULT_GET)
     {
+        (new Attribute("FUNCTION","可以快速拿到对应环境变量。"));
         $envList = self::$EnvList;
         $env = [];
         

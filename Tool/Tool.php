@@ -506,7 +506,7 @@ class Tool
         public static function FileRead(string $url)
         {
                 $file = fopen($url, 'r');
-                return fread($file,256);
+                return fread($file,2560000);
         }
         /**
          * 获取本机IP地址->(获取本机IP地址)
