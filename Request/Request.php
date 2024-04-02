@@ -87,6 +87,16 @@ class Request
                 return $headers[$headersname] ?? null;
 
         }
+        /**
+         * 获取响应头
+         * @static
+         * @param string $responsename 相应头名字 选填 默认为 ‘’
+         * @return mixed
+         */
+        public static function response(string $responsename = ''):mixed
+        {
+                return empty($responsename) ?  apache_response_headers() : apache_response_headers()[$responsename] ?? null;
+        }
 
 
 }
