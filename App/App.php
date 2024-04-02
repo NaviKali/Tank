@@ -48,8 +48,7 @@ class App
         }
 
         $this->VerIsPublicFile();
-        if (!$this->isPublicFile) {
-
+        if ($this->isPublicFile) {
             if ($AppConfig["AppParamsType"] == "GET") {
                 $this->AppBaseParams = Func::BaseDeCodeUrl();
             } else if ($AppConfig["AppParamsType"] == "POST") {
