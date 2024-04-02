@@ -60,12 +60,25 @@ class VerificationCode
         return self::$Code == $code ? true : false;
     }
     /**
+     * 发送验证码消息
+     * @static
+     * @access public
+     * @param int $wait 等待时间 选填 默认为 1
+     * @return string
+     */
+    public static function SendVerificationCode(int $wait = 1):string
+    {
+            sleep($wait);
+            self::getRandomCode();
+            return self::$Code;
+    }
+    /**
      * 获取随机验证码
      * @return void
      */
     protected static function getRandomCode(): void
     {
-        $english = &self::$EnglishFont;
+        $english = self::$EnglishFont;
         $english = str_shuffle($english);
         $english = substr($english, 1, 3);
         $math = self::$MathFont;
