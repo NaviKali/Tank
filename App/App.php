@@ -23,13 +23,23 @@ class App
      */
     protected array $AppBaseParams = [];
     /**
+     * 不可调用类列表
+     */
+    protected array $NotCallClassList = [];
+    /**
      * App验证
      */
     public function __construct(mixed $class)
     {
         $AppConfig = require (getRoot() . "config\\App.php");
 
+        //?是否开启App场景化
+        if (!$AppConfig["IsStartApp"])
+            return;
+
         $this->AppCode = $AppConfig["AppCode"];
+
+        $this->NotCallClassList = $AppConfig["AppNotCallClass"];
 
         if (is_subclass_of($class, "tank\BaseController")):
             header("Content-Type:application/json");
@@ -43,7 +53,7 @@ class App
             if (
                 $Autograph == md5($AppConfig["AppNotCallClass"][$v])
             ) {
-                \tank\Error\error::create("当前类不可调用!",__FILE__,__LINE__);
+                \tank\Error\error::create("当前类不可调用!", __FILE__, __LINE__);
             }
         }
 
@@ -64,6 +74,14 @@ class App
         }
     }
     /**
+     * 获取不可调用类列表
+     * @return array
+     */
+    public function getNotCallClassList():array
+    {
+        return $this->NotCallClassList;
+    }
+    /**
      * 验证是否为入口文件
      */
     protected function VerIsPublicFile()
@@ -72,8 +90,9 @@ class App
     }
     /**
      * 获取解码后的参数
+     * @return array
      */
-    public function getAppParams()
+    public function getAppParams():array
     {
         return $this->AppBaseParams;
     }
