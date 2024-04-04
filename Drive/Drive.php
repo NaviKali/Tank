@@ -36,14 +36,14 @@ class Drive
      */
     public function getDriveList(string $type = "start")
     {
-            return $this->DriveList[$type];
+        return $this->DriveList[$type];
     }
     /**
      * 配置文件是否存在
      * @access protected
      * @return void
      */
-    protected function iniFileisExiste():void
+    protected function iniFileisExiste(): void
     {
         if (!file_exists($this->CurrentUsePHPiniFileUrl))
             \tank\Error\error::create("配置文件路径错误!", __FILE__, __LINE__);
@@ -54,7 +54,7 @@ class Drive
      * @param string $file 配置文件内容 必填
      * @return array
      */
-    protected function iniFileHandle(string $file):array
+    protected function iniFileHandle(string $file): array
     {
         $file = explode(PHP_EOL, $file);
         $start = [];
@@ -79,5 +79,26 @@ class Drive
 
         $this->DriveList = ["start" => $start, "close" => $closeHandle];
         return ["start" => $start, "close" => $closeHandle];
+    }
+    /**
+     * 是否存在该某一个驱动
+     * @access public
+     * @param string $drivename 驱动名字 必填
+     */
+    public function Has(string $drivename)
+    {
+        foreach ($this->DriveList["start"] as $k => $v) {
+            if ($drivename == $v) {
+                return true;
+            } else {
+                foreach ($this->DriveList["stop"] as $k => $v) {
+                    if ($drivename == $v) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }

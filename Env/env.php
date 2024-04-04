@@ -46,8 +46,11 @@ class env
         }
 
         if ($key != DEFAULT_GET) {
+            //?是否存在你索要的环境变量的key 有则给 否则为[]
             if (in_array($key, array_keys($env))) {
                 return $env[$key];
+            }else{
+                return [];
             }
         }
         return $env;
