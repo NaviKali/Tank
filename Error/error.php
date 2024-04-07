@@ -15,15 +15,15 @@ class error
          * @param string $file 当前文件路径 选填
          * @param string $line 当前文件行数 选填
          */
-        public static function create(string $data,string $file = '',string $line = '')
+        public static function create(string $data, string $file = '', string $line = '')
         {
                 header("HTTP/1.1 500 Internal Server Error");
                 header("Content-Type:text/html");
                 $workdir = getcwd();
                 $locationname = gethostname();
                 $ip = gethostbyname(gethostname());
-                include(getRoot()."/public/then/error.html");
+                include (getRoot() . "/public/then/error.html");
                 die();
-            }
+        }
 
 }

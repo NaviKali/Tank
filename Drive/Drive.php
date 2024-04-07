@@ -33,8 +33,9 @@ class Drive
      * 获取驱动列表
      * @access public
      * @param string $type 驱动类型 选填 默认为 start  [(开启的驱动)start,(关闭的驱动)close]
+     * @return array
      */
-    public function getDriveList(string $type = "start")
+    public function getDriveList(string $type = "start"): array
     {
         return $this->DriveList[$type];
     }
@@ -52,9 +53,9 @@ class Drive
      * 配置文件处理
      * @access protected
      * @param string $file 配置文件内容 必填
-     * @return array
+     * @return void
      */
-    protected function iniFileHandle(string $file): array
+    protected function iniFileHandle(string $file): void
     {
         $file = explode(PHP_EOL, $file);
         $start = [];
@@ -76,22 +77,20 @@ class Drive
         foreach ($close as $k => $v) {
             array_push($closeHandle, explode(";", $v)[1]);
         }
-
         $this->DriveList = ["start" => $start, "close" => $closeHandle];
-        return ["start" => $start, "close" => $closeHandle];
     }
     /**
      * 是否存在该某一个驱动
      * @access public
      * @param string $drivename 驱动名字 必填
      */
-    public function Has(string $drivename)
+    public function Has(string $drivename): mixed
     {
         foreach ($this->DriveList["start"] as $k => $v) {
             if ($drivename == $v) {
                 return true;
             } else {
-                foreach ($this->DriveList["stop"] as $k => $v) {
+                foreach ($this->DriveList["close"] as $k => $v) {
                     if ($drivename == $v) {
                         return true;
                     } else {
@@ -100,5 +99,26 @@ class Drive
                 }
             }
         }
+        return true;
+    }
+    /**
+     * 是否开启某一个或某一些驱动
+     * @access public
+     * @param string|array $drivename 驱动名字 必填
+     * @return bool|array
+     */
+    public function IsOpenDrive(string|array $drivename): bool|array
+    {
+        if (is_string($drivename))
+            return in_array($drivename, $this->DriveList["start"]) ? true : false;
+
+        $arr = [];
+        if (is_array($drivename)) {
+            foreach ($drivename as $k => $v) {
+                $arr[$v] = in_array($v, $this->DriveList["start"]) ? true : false;
+            }
+            return $arr;
+        }
+        return true;
     }
 }

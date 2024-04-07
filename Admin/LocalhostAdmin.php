@@ -34,8 +34,9 @@ class LocalhostAdmin
      * @access public
      * @param string $user 账号 必填
      * @param string $password 密码 必填
+     * @return void
      */
-    public function CreateAdmin(string $user, string $password)
+    public function CreateAdmin(string $user, string $password):void
     {
         //?不能超出本地管理最大长度
         if (count($this->getLocalhostAdminList()) > $this->LocalhostAdminConfig["LocalhostAdminMaxLimit"])
@@ -49,8 +50,10 @@ class LocalhostAdmin
     }
     /**
      * 获取本地管理员列表
+     * @access public
+     * @return array
      */
-    public function getLocalhostAdminList()
+    public function getLocalhostAdminList():array
     {
         $content = Tool::FileRead($this->LocalhostAdminFileUrl);
         return explode("[ADMIN]", $content);
@@ -60,8 +63,9 @@ class LocalhostAdmin
      * @access public
      * @param string $user 账号 必填
      * @param string $password 密码 必填
+     * @return bool
      */
-    public function LocalhostAdminLogin(string $user, string $password)
+    public function LocalhostAdminLogin(string $user, string $password): bool
     {
         if ($this->LocalhostAdminConfig["Base64"]) {
             $user = base64_encode($user);
@@ -73,6 +77,7 @@ class LocalhostAdmin
             else
                 return false;
         }
+        return true;
     }
 
 

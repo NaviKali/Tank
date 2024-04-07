@@ -363,7 +363,7 @@ class Tool
                         if (!$Verification_key && $verification_arr[2] == "unrequire") {
                                 $params[$verification_arr[0]] = "";
                         } //*没有的话就自动填充为空字符串(unrequire)
-                        //!错误类型排除,Verification_key(require->必填,unrequire->不必填)
+                        //!错误类型排除,Verification_key(require->必填,unrequire->不必填)close
                         if ($verification_arr[2] == "require" || $verification_arr[2] == "unrequire") {
                                 //?是否设置必填(require)
                                 //!为空则扔出异常
