@@ -198,10 +198,11 @@ class http
                         $str = Tool::Salt(time());
                         $url = "";
                         for ($i = 0; $i < $length; $i++) {
-                                $keyStart = rand(1, 5);
+                                $randomNumber = rand(1,20);
+                                $keyStart = rand(1, $randomNumber);
                                 $valueStart = rand(6, 15);
                                 $StartStr = substr($str, $keyStart, $valueStart);
-                                $keyEnd = rand(1, 5);
+                                $keyEnd = rand(1, $randomNumber);
                                 $valueEnd = rand(6, 15);
                                 $EndStr = substr($str, $keyEnd, $valueEnd);
                                 $url .= "$StartStr=$EndStr&";

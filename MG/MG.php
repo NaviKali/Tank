@@ -6,7 +6,7 @@ namespace tank\MG;
  * @author LL
  */
 
-include('../../config/Database.php');
+include ('../../config/Database.php');
 use config\SQL as SQL;
 use MongoDB\Driver\Manager as Manager;
 use MongoDB\Driver\Exception as DriverException;
@@ -112,7 +112,7 @@ interface IMG
         /**
          * 使用表/切换表
          */
-        function use (string $collectionName);
+        function use(string $collectionName);
 }
 
 
@@ -580,10 +580,8 @@ class MG implements IMG
         public function Once()
         {
                 $once = $this->select();
-                if (!$once) {
+                if (!$once)
                         return [];
-                }
-                ;
                 return (array) $once[0];
         }
 
@@ -854,7 +852,7 @@ class MG implements IMG
          * TODO用来选择MongoDB集合
          * @param string $collectionName 集合名字
          */
-        public function use (string $collectionName)
+        public function use(string $collectionName)
         {
                 $this::IsClient();
                 self::$CollectionName = $collectionName;

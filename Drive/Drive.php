@@ -83,6 +83,7 @@ class Drive
      * 是否存在该某一个驱动
      * @access public
      * @param string $drivename 驱动名字 必填
+     * @return mixed
      */
     public function Has(string $drivename): mixed
     {

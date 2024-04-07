@@ -8,9 +8,15 @@ use tank\Error\error;
 
 class httpError extends \Exception
 {
-    public function __construct(string $message = "", \Throwable $previous = null)
+    /**
+     * 创建一个HTTP错误异常
+     */
+    public function __construct(string $message = "", int $code = 500, \Throwable $previous = null)
     {
-        error::create($message, __FILE__, __LINE__);
+        if ($code == 500)
+            error::create($message, __FILE__, __LINE__);
+
+        die;
     }
 
 }
