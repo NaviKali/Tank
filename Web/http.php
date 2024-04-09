@@ -75,7 +75,7 @@ class http
                 $httpUrl = \tank\Func\Func::getUrl();
                 $Arr_httpUrl = explode("/", $httpUrl);
                 //*获取App文件
-                $App_file = $Arr_httpUrl[count($Arr_httpUrl) - $Attr['other']['getAppFile']];
+                $App_file = $Arr_httpUrl[count($Arr_httpUrl) - $Attr['other']['getAPPFile']];
                 //*获取调用函数
                 $App_function = $Arr_httpUrl[count($Arr_httpUrl) - $Attr['other']['getAPPFunction']];
                 //!防止出现GET请求的错误
@@ -198,7 +198,7 @@ class http
                         $str = Tool::Salt(time());
                         $url = "";
                         for ($i = 0; $i < $length; $i++) {
-                                $randomNumber = rand(1,20);
+                                $randomNumber = rand(1, 20);
                                 $keyStart = rand(1, $randomNumber);
                                 $valueStart = rand(6, 15);
                                 $StartStr = substr($str, $keyStart, $valueStart);
