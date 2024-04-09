@@ -32,6 +32,7 @@ class Drive
     /**
      * 获取驱动列表
      * @access public
+     * @date 2024/3/28
      * @param string $type 驱动类型 选填 默认为 start  [(开启的驱动)start,(关闭的驱动)close]
      * @return array
      */
@@ -41,6 +42,7 @@ class Drive
     }
     /**
      * 配置文件是否存在
+     * @date 2024/3/28
      * @access protected
      * @return void
      */
@@ -51,6 +53,7 @@ class Drive
     }
     /**
      * 配置文件处理
+     * @date 2024/3/28
      * @access protected
      * @param string $file 配置文件内容 必填
      * @return void
@@ -82,6 +85,7 @@ class Drive
     /**
      * 是否存在该某一个驱动
      * @access public
+     * @date 2024/3/28
      * @param string $drivename 驱动名字 必填
      * @return mixed
      */
@@ -105,6 +109,7 @@ class Drive
     /**
      * 是否开启某一个或某一些驱动
      * @access public
+     * @date 2024/3/28
      * @param string|array $drivename 驱动名字 必填
      * @return bool|array
      */

@@ -12,7 +12,9 @@ class Request
 {
         /**
          * 获取POST参数
+         * @access public
          * @static
+         * @date 2023/11/20
          * TODO用来直接获取参数所有数据数组。
          * @return mixed
          */
@@ -32,7 +34,9 @@ class Request
         }
         /**
          * 参数转换
+         * @date 2023/12/01
          * TODO用来GET请求中转换请求字符串
+         * @access public
          * @static
          * @param array $data 转换数据参数data 必填
          * @return string
@@ -63,6 +67,8 @@ class Request
         }
         /**
          * 获取GET参数
+         * @access public
+         * @date 2023/12/01
          * @static
          * TODO用来直接获取参数所有数据数组。
          * @return mixed
@@ -74,8 +80,25 @@ class Request
                 return $_GET ?? [];
         }
         /**
+         * 获取参数值[只拿值，不拿键]
+         * @access public
+         * @date 2024/4/8
+         * @static
+         * @param string $type 参数类型 选填 默认为 post [post or get]
+         * @return array
+         */
+        public static function getValue(string $type = 'post'): array
+        {
+                if ($type == 'post')
+                        return array_values(self::postparam());
+                if ($type == 'get')
+                        return array_values(self::param());
+                return [];
+        }
+        /**
          * 获取请求头
          * @static
+         * @date 2023/12/01
          * TODO用来获取请求头信息数据
          * @param string $headersname 请求头名字 必填
          * @return mixed
@@ -89,13 +112,15 @@ class Request
         }
         /**
          * 获取响应头
+         * @access public
          * @static
+         * @date 2023/12/01
          * @param string $responsename 相应头名字 选填 默认为 ‘’
          * @return mixed
          */
-        public static function response(string $responsename = ''):mixed
+        public static function response(string $responsename = ''): mixed
         {
-                return empty($responsename) ?  apache_response_headers() : apache_response_headers()[$responsename] ?? null;
+                return empty($responsename) ? apache_response_headers() : apache_response_headers()[$responsename] ?? null;
         }
 
 

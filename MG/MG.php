@@ -155,7 +155,7 @@ class MG implements IMG
         /**
          * 选中文档数据
          */
-        public static $documentContent;
+        public mixed $documentContent;
         /**
          * 筛选条件
          */
@@ -167,11 +167,11 @@ class MG implements IMG
         /**
          * 限制长度
          */
-        public static $limit;
+        public int $limit;
         /**
          * 跳过长度
          */
-        public static $skip;
+        public int $skip;
         /**
          * 修改条件
          */
@@ -564,20 +564,39 @@ class MG implements IMG
 
         }
         /**
+         * 保存数据|创建数据 
+         * *没有值存在的时候则创建数据 否则 修改数据
+         * @access public
+         * @param array $data 修改或创建的数据 必填
+         * @return MG
+         */
+        public function save(array $data): MG
+        {
+                //?是否对应值存在
+                $find = $this->where([array_keys($data)[0] => array_values($data)[0]])->Once();
+                if (!$find)
+                        $this->create($data);
+                $this->update($data);
+                return $this;
+        }
+        /**
          * 筛选字段
          * TODO用来过滤多余的显示字段数据。
-         * @param array $field 筛选字段
+         * @param array $field 筛选字段 必填
+         * @return MG
          */
-        public function field(array $field)
+        public function field(array $field): MG
         {
                 $this::$field = $field;
                 return $this; //*返回对象实例
         }
         /**
          * 单条数据
+         * @access public
          * TODO用来获取某一个单条文档数据。
+         * @return array
          */
-        public function Once()
+        public function Once(): array
         {
                 $once = $this->select();
                 if (!$once)
@@ -588,10 +607,10 @@ class MG implements IMG
         /**
          * 查询数据
          * TODO用来查询最终结果。
-         * @return array
          * @param bool $isGetCount 是否获取数据的总数 选填 默认为falses
+         * @return int|array
          */
-        public function select(bool $isGetCount = false)
+        public function select(bool $isGetCount = false): int|array
         {
                 //?判断是否开启软删除
                 $filter = $this::$OpenSoftDelete == true ? $this->SelectDelete($this::$filter) : $this::$filter;
@@ -607,11 +626,11 @@ class MG implements IMG
                 if (!isset($cursor))
                         return [];
                 //?判断是否走limit
-                if (isset($this->limit)) {
+                if (isset($this->limit) and !isset($this->skip)) {
                         $this->MGLimit($cursor);
                 }
                 //?判断是否走skip
-                else if (isset($this->skip)) {
+                else if (isset($this->skip) and !isset($this->limit)) {
                         $this->MGSkip($cursor);
                 }
                 //?判断是否走limit和skip

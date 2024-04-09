@@ -32,6 +32,7 @@ class LocalhostAdmin
     /**
      * 创建管理员账号
      * @access public
+     * @date 2024/4/1
      * @param string $user 账号 必填
      * @param string $password 密码 必填
      * @return void
@@ -51,6 +52,7 @@ class LocalhostAdmin
     /**
      * 获取本地管理员列表
      * @access public
+     * @date 2024/4/1
      * @return array
      */
     public function getLocalhostAdminList():array
@@ -61,6 +63,7 @@ class LocalhostAdmin
     /**
      * 本地管理员登录
      * @access public
+     * @date 2024/4/1
      * @param string $user 账号 必填
      * @param string $password 密码 必填
      * @return bool
