@@ -28,6 +28,10 @@ use tank\Request\Request;
 interface IMG
 {
         /**
+         * 强制删除
+         */
+        public function forcedelete();
+        /**
          * 查询过滤
          */
         public function selectFilter(?array $filter = []);
@@ -86,7 +90,7 @@ interface IMG
         /**
          * 删除
          */
-        function delete();
+        function delete(bool $isForce = false);
         /**
          * 修改
          */
@@ -648,12 +652,36 @@ class MG implements IMG
                 return $this;
         }
         /**
+         * 强制删除
+         * @access public
+         * @date 2024-04-11
+         */
+        public function forcedelete()
+        {
+                //?判断是否进行过滤筛选
+                $isFilter = $this::$filter == [] ? false : true;
+                if (!$isFilter)
+                        return Tool::abort("请进行过滤筛选！");
+
+                if ($this::$OpenSoftDelete) {
+                        $this::$OpenSoftDelete = false;
+                        $this->delete();
+                        $this::$OpenSoftDelete = true;
+                } else {
+                        $this->delete();
+                }
+        }
+        /**
          * 删除单条数据
          * TODO用来删除单条文档数据。
+         * @param bool $isForce 是否强制删除 选填 默认为 false [模型层]
          */
-        public function delete()
+        public function delete(bool $isForce = false)
         {
                 $this::onBeforeDelete(); //*删除前函数
+
+                $isForce ? $this->forcedelete() : null;
+
                 //?判断是否开启软删除
                 if (!$this::$OpenSoftDelete) {
                         $this::IsClient();
@@ -730,7 +758,11 @@ class MG implements IMG
          */
         public function field(array $field): MG
         {
-                $this::$field = $field;
+                $arr = [];
+                foreach ($field as $k => $v) {
+                        $arr[$v] = true;
+                }
+                $this::$field = $arr;
                 return $this; //*返回对象实例
         }
         /**
@@ -750,7 +782,7 @@ class MG implements IMG
         /**
          * 查询数据
          * TODO用来查询最终结果。
-         * @param bool $isGetCount 是否获取数据的总数 选填 默认为falses
+         * @param bool $isGetCount 是否获取数据的总数 选填 默认为 false
          * @return int|array
          */
         public function select(bool $isGetCount = false): int|array
