@@ -1,6 +1,8 @@
 <?php
 namespace tank\MG;
 
+use tank\Error\httpError;
+
 /**
  * BaseMongoDB 基层操作MongoDB数据库
  * @author LL
@@ -25,6 +27,22 @@ use tank\Request\Request;
  */
 interface IMG
 {
+        /**
+         * 查询过滤
+         */
+        public function selectFilter(?array $filter = []);
+        /**
+         * 查询后先执行
+         */
+        public function selectAfterVoid(\Closure $void);
+        /**
+         * 查询前先执行
+         */
+        public function selectBeforeVoid(\Closure $void, bool $defaultSelect = true);
+        /**
+         * 保存
+         */
+        public function save(array $data);
         /**
          * 修改单条字段
          */
@@ -193,6 +211,18 @@ class MG implements IMG
         /* 其余业务时间字段 */
         public static $OtherWriteField = null;
         /**
+         * 查询前
+         */
+        private static function onBeforeSelect()
+        {
+        }
+        /**
+         * 查询后
+         */
+        private static function onAfterSelect()
+        {
+        }
+        /**
          * 添加前
          */
         private static function onBeforeCreate()
@@ -254,6 +284,119 @@ class MG implements IMG
         /**业务姓名字段值 */
         public static $UserNameFieldValue = null;
         /**
+         * 查询过滤
+         * @access public
+         * @date 2024/04/10
+         * @param array $filter 过滤条件 选填 默认为 [] 格式为 [字段,条件,数值] "二维数组"
+         * @throws httpError 请求错误 异常
+         * @return array
+         */
+        public function selectFilter(?array $filter = []): array
+        {
+                //*查询
+                $this->select();
+
+                if ($this->documentContent == [])
+                        return [];
+
+                $ArrayDimension = $this->RecognitionArrayDimension($filter);
+                //!错误排除
+                if ($ArrayDimension != 2)
+                        throw new httpError("参数类型错误!");
+
+                return $this->MGFilter($filter, $this->documentContent);
+
+        }
+        /**
+         * 识别数组维度
+         * @access private
+         * @date 2024/04/10
+         * @param array $data 需要识别的数组 必填
+         * @param int $index 维度索引 选填 默认为 1
+         * !维度索引建议不要修改，默认为1即可。
+         * @return int 维数
+         */
+        private function RecognitionArrayDimension(array $data, int $index = 1): int
+        {
+                if (is_array($data[0])) {
+                        return $this->RecognitionArrayDimension($data[0], $index + 1);
+                } else {
+                        return $index;
+                }
+        }
+        /**
+         * MGfilter
+         * @access private
+         * @param array $filter 过滤条件 必填
+         * @param mixed $data 数据 必填
+         * @return array
+         */
+        private function MGFilter(array $filter, mixed $data): array
+        {
+                $arr = [];
+                foreach ($data as $k => $dataValue) {
+                        foreach ($filter as $k => $v) {
+                                if ($v[1] == "=" or $v[1] == "等于") {
+                                        if ($dataValue->{$v[0]} == $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+
+                                }
+                                if ($v[1] == "<" or $v[1] == "小于") {
+                                        if ($dataValue->{$v[0]} < $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+                                }
+                                if ($v[1] == ">" or $v[1] == "大于") {
+                                        if ($dataValue->{$v[0]} > $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+                                }
+                                if ($v[1] == "<=" or $v[1] == "小于等于") {
+                                        if ($dataValue->{$v[0]} <= $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+                                }
+                                if ($v[1] == ">=" or $v[1] == "大于等于") {
+                                        if ($dataValue->{$v[0]} >= $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+                                }
+                                if ($v[1] == "!=" or $v[1] == "不等于") {
+                                        if ($dataValue->{$v[0]} != $v[2]) {
+                                                array_push($arr, $dataValue);
+                                        }
+                                }
+
+                        }
+                }
+                return $arr;
+        }
+        /**
+         * 查询后先执行
+         * @access public
+         * @date 2024/04/10
+         * @param \Closure $void 执行函数 必填
+         * @return \Closure($query) 回调一个带查询后数据的函数
+         */
+        public function selectAfterVoid(\Closure $void): \Closure
+        {
+                return $void($this->select());
+        }
+        /**
+         * 查询前先执行
+         * @access public
+         * @date 2024/04/10
+         * @param \Closure $void 执行函数 必填
+         * @param bool $defaultSelect 默认开启查询 选填 默认为 false
+         * @return mixed
+         */
+        public function selectBeforeVoid(\Closure $void, bool $defaultSelect = true): mixed
+        {
+                $void();
+                return $defaultSelect ? $this->select() : $this;
+        }
+        /**
          * 修改单条字段
          * TODO只修改单条数据中的字段值
          */
@@ -271,10 +414,10 @@ class MG implements IMG
          */
         public function GuidDelete(string $Guid)
         {
-                $find = $this->where([$this::$Guid => $Guid])->Once();
+                $find = $this->where([$this::$Guid[0] => $Guid])->Once();
                 if (!$find)
                         return \tank\Error\error::create("删除失败!", __FILE__, __LINE__);
-                !$this::$Guid ? \tank\Error\error::create("请配置模型层来进行Guid删除!", __FILE__, __LINE__) : $this->where([$this::$Guid => $Guid])->delete();
+                !$this::$Guid ? \tank\Error\error::create("请配置模型层来进行Guid删除!", __FILE__, __LINE__) : $this->where([$this::$Guid[0] => $Guid])->delete();
         }
         /**
          * Key键删除
@@ -612,6 +755,8 @@ class MG implements IMG
          */
         public function select(bool $isGetCount = false): int|array
         {
+                //*查询前函数
+                $this::onBeforeSelect();
                 //?判断是否开启软删除
                 $filter = $this::$OpenSoftDelete == true ? $this->SelectDelete($this::$filter) : $this::$filter;
                 $this::IsClient();
@@ -649,6 +794,8 @@ class MG implements IMG
                 if ($this::$isJoin) {
                         return $isGetCount ? $this->Count() : $this::$JoinValue;
                 }
+                //*查询后函数
+                $this::onAfterSelect();
                 //*返回最终所有值
                 return $isGetCount ? $this->Count() : $this->documentContent;
         }
