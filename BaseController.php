@@ -4,6 +4,7 @@ namespace tank;
 use tank\Tool\Tool;
 use tank\MG\MG;
 use tank\App\App;
+use function tank\{Success};
 
 class BaseController
 {
@@ -146,6 +147,39 @@ class BaseController
                 }
                 array_push($con, ['title' => '操作', 'dataIndex' => '操作', 'fixed' => 'right']);
                 return $con;
+        }
+        /**
+         * 抛出返回成功提示
+         * @access public
+         * @static
+         * @param string $message 提示内容 必填
+         * @param array $data 返回数据 选填 默认为 []
+         * @return void
+         */
+        public static function throwSuccess(string $message, array $data = []): void
+        {
+                Success($message, $data);
+        }
+        /**
+         * 抛出返回错误提示
+         * @access public
+         * @static
+         * @return mixed
+         */
+        public static function throwError(): mixed
+        {
+                return Tool::Message(500, '');
+        }
+        /**
+         * 抛出返回警告提示
+         * @access public
+         * @static
+         * @param string $message 提示内容 必填
+         * @return mixed
+         */
+        public static function throwWarning(string $message): mixed
+        {
+                return Tool::Message(404, $message);
         }
 
 }

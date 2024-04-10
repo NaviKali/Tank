@@ -91,20 +91,7 @@ class Drive
      */
     public function Has(string $drivename): mixed
     {
-        foreach ($this->DriveList["start"] as $k => $v) {
-            if ($drivename == $v) {
-                return true;
-            } else {
-                foreach ($this->DriveList["close"] as $k => $v) {
-                    if ($drivename == $v) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+        return in_array($drivename, $this->DriveList) ? true : false;
     }
     /**
      * 是否开启某一个或某一些驱动
