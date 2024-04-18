@@ -34,9 +34,12 @@ class BaseController
          */
         public static function VerPassWordPreg(string $password): bool
         {
-                //*密码必须是0-9的数字注册，长度必须小于等于10
-                if (preg_match('/[0-9]/', $password) and strlen($password) <= 10)
-                        return true;
+                //*密码必须是0-9的数字注册，长度必须小于等于10,包含a-z字母
+                if (preg_match('/[0-9]/', $password) and strlen($password) <= 10) {
+                        //*包含字母
+                        if (preg_match('/[a-z]/', $password) or preg_match('/[A-Z]/', $password))
+                                return true;
+                }
                 return false;
         }
         /**
