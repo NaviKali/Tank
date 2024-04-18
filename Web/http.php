@@ -89,9 +89,9 @@ class http
                         /**
                          * 获取对应APP类 | 调用对应函数
                          */
-                        //!异常错误处理
-                        $this::ErrorHandle($App_function);
                         $class = explode('/', $this::$Mount[$App_function])[0];
+                        //!异常错误处理
+                        $this::ErrorHandle($class);
                         $App_function = explode('/', $this::$Mount[$App_function])[1];
                         $Class = $this::getCorrespondAppClass($class);
                 } else {
