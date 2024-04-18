@@ -81,8 +81,7 @@ class http
                 //!防止出现GET请求的错误
                 $App_function = explode("?", $App_function);
                 $App_function = $App_function[0];
-                //!异常错误处理
-                $this::ErrorHandle($App_file);
+
                 /**
                  *  ?是否为伪名函数
                  */
@@ -90,6 +89,8 @@ class http
                         /**
                          * 获取对应APP类 | 调用对应函数
                          */
+                        //!异常错误处理
+                        $this::ErrorHandle($App_function);
                         $class = explode('/', $this::$Mount[$App_function])[0];
                         $App_function = explode('/', $this::$Mount[$App_function])[1];
                         $Class = $this::getCorrespondAppClass($class);
@@ -97,6 +98,8 @@ class http
                         /**
                          * 如果没有挂载 -> 那么就需要具体类加函数 | 获取对应APP类
                          */
+                        //!异常错误处理
+                        $this::ErrorHandle($App_file);
                         $Class = $this::getCorrespondAppClass($App_file);
                 }
                 //调用对应函数
