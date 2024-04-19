@@ -6,6 +6,7 @@ namespace tank\App;
 
 use tank\Func\Func;
 use tank\Request\Request;
+use tank\Web\http;
 use function tank\{getRoot, getAutograph};
 
 class App
@@ -33,10 +34,6 @@ class App
     {
         $AppConfig = require (getRoot() . "config\\App.php");
 
-        //?是否开启App场景化
-        if (!$AppConfig["IsStartApp"])
-            return;
-
         $this->AppCode = $AppConfig["AppCode"];
 
         $this->NotCallClassList = $AppConfig["AppNotCallClass"];
@@ -47,6 +44,15 @@ class App
             header("Autograph:$class");//*签名
         endif;
 
+        //?是否开启App场景化
+        if (!$AppConfig["IsStartApp"]) {
+            if ($AppConfig["AppParamsType"] == "GET")
+                $this->AppBaseParams = Request::param();
+            if ($AppConfig["AppParamsType"] == "POST")
+                $this->AppBaseParams = Request::postparam();
+            return;
+        }
+
         //?是否为不可调用类
         $Autograph = getAutograph();
         for ($v = 0; $v < count($AppConfig["AppNotCallClass"]); $v++) {
@@ -56,7 +62,6 @@ class App
                 \tank\Error\error::create("当前类不可调用!", __FILE__, __LINE__);
             }
         }
-
         $this->VerIsPublicFile();
         if ($this->isPublicFile) {
             if ($AppConfig["AppParamsType"] == "GET") {
@@ -77,7 +82,7 @@ class App
      * 获取不可调用类列表
      * @return array
      */
-    public function getNotCallClassList():array
+    public function getNotCallClassList(): array
     {
         return $this->NotCallClassList;
     }
@@ -86,13 +91,13 @@ class App
      */
     protected function VerIsPublicFile()
     {
-        str_contains("public", Func::getUrl()) ? $this->isPublicFile = true : $this->isPublicFile = false;
+        str_contains(Func::getUrl(), "public") ? $this->isPublicFile = true : $this->isPublicFile = false;
     }
     /**
      * 获取解码后的参数
      * @return array
      */
-    public function getAppParams():array
+    public function getAppParams(): array
     {
         return $this->AppBaseParams;
     }

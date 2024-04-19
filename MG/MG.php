@@ -303,7 +303,7 @@ class MG implements IMG
                 if ($this->documentContent == [])
                         return [];
 
-                $ArrayDimension = $this->RecognitionArrayDimension($filter);
+                $ArrayDimension = Operate::RecognitionArrayDimension($filter);
                 //!错误排除
                 if ($ArrayDimension != 2)
                         throw new httpError("参数类型错误!");
@@ -311,23 +311,7 @@ class MG implements IMG
                 return $this->MGFilter($filter, $this->documentContent);
 
         }
-        /**
-         * 识别数组维度
-         * @access private
-         * @date 2024/04/10
-         * @param array $data 需要识别的数组 必填
-         * @param int $index 维度索引 选填 默认为 1
-         * !维度索引建议不要修改，默认为1即可。
-         * @return int 维数
-         */
-        private function RecognitionArrayDimension(array $data, int $index = 1): int
-        {
-                if (is_array($data[0])) {
-                        return $this->RecognitionArrayDimension($data[0], $index + 1);
-                } else {
-                        return $index;
-                }
-        }
+        
         /**
          * MGfilter
          * @access private

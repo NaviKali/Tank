@@ -80,10 +80,27 @@ class Operate
                 $token = Request::headers('Token');
                 $find = (new MG('token'))->comment('Token验证.')->where(['token_value' => $token])->select();
                 if (!$find) {
-                        Error("登录超时!",function:"Token验证");
+                        Error("登录超时!", function: "Token验证");
                         return die();
                 }
                 MG::$filter = [];//*初始化过滤内容
+        }
+        /**
+         * 识别数组维度
+         * @access public
+         * @date 2024/04/10
+         * @param array $data 需要识别的数组 必填
+         * @param int $index 维度索引 选填 默认为 1
+         * !维度索引建议不要修改，默认为1即可。
+         * @return int 维数
+         */
+        public static function RecognitionArrayDimension(array $data, int $index = 1): int
+        {
+                if (is_array($data[0])) {
+                        return self::RecognitionArrayDimension($data[0], $index + 1);
+                } else {
+                        return $index;
+                }
         }
 
 

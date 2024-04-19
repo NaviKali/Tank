@@ -25,10 +25,12 @@ class Request
                 if ($Type == "application/json") {
                         $post = file_get_contents("php://input");
                         $post = json_decode($post); //JSON解码
+                        if ((array) $post == [])
+                                return [];
                         return (array) $post;
                 } else {
-                        if (!$_POST or $_POST == [])
-                                return Tool::Message(404, "没有携带任何参数！");
+                        // if (!$_POST or $_POST == [])
+                                // return Tool::Message(404, "没有携带任何参数！");
                         return $_POST ?? [];
                 }
         }

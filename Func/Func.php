@@ -31,6 +31,9 @@ class Func
         public static function BaseDeCodeUrl()
         {
                 $params = $_SERVER['QUERY_STRING'];
+                if (empty($params)){
+                        return [];
+                }
                 $params = explode("&", $params);
                 $con = [];
                 for ($i = 0; $i < count($params); $i++) {

@@ -13,16 +13,25 @@ class BaseController
          */
         protected App $app;
         /**
-         * 快速当前类实例
+         * 当前类实例名字
          */
-        public static mixed $FastCurrentNewClass;
+        public string $FastCurrentNewClass;
         /**
          * APP场景
          */
         public function __construct()
         {
                 $this->app = (new App(get_class($this)));
-                self::$FastCurrentNewClass = (get_class($this));
+                $this->FastCurrentNewClass = get_class($this);
+        }
+        /**
+         * 获取当前实例
+         * @access public
+         * @return mixed
+         */
+        public function getNewClass():mixed
+        {
+                return (new $this->FastCurrentNewClass);
         }
         /**
          * 密码验证场景规则
