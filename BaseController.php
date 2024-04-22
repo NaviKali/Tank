@@ -63,7 +63,7 @@ class BaseController
          */
         public static function VerIsNull(string|array $data, \Closure $success, \Closure $error): void
         {
-                !empty($data) || $data == [] ? $error() : $success($data);
+                empty($data) || $data == [] ? $error() : $success($data);
         }
         /**
          * 字段相连表

@@ -31,7 +31,15 @@ if (!function_exists('getRoot')) {
                 return str_replace("tank", '', __DIR__);
         }
 }
-
+/**
+ * 获取视图层路径
+ */
+if (!function_exists('getViewUrl')) {
+        function getViewUrl()
+        {
+                return getRoot() . "/views";
+        }
+}
 /**
  * 欢迎语
  * @return string
@@ -287,8 +295,7 @@ if (!function_exists("OverallSituationErrorConfig")) {
  * 获取签名
  * TODO当调用APP类时会自动生成请求头签名。
  */
-if(!function_exists("getAutograph"))
-{
+if (!function_exists("getAutograph")) {
         function getAutograph()
         {
                 return apache_response_headers()["Autograph"];
