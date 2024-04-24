@@ -20,7 +20,7 @@ use MongoDB\Driver\BulkWrite as BulkWrite;
 use tank\Log\Log\Log as Log;
 use tank\Request\Request;
 
-
+use function tank\getRoot;
 
 /**
  * MG -> 接口
@@ -311,7 +311,7 @@ class MG implements IMG
                 return $this->MGFilter($filter, $this->documentContent);
 
         }
-        
+
         /**
          * MGfilter
          * @access private
@@ -529,12 +529,8 @@ class MG implements IMG
          */
         public static function Logs(string $type, string $data)
         {
-                //?获取文件夹生成路径
-                $fileUrl = __DIR__;
-                $fileUrl = str_replace("\\", "/", $fileUrl);
-                $fileUrl = str_replace("tank/MG", "logs", $fileUrl);
-                Log::TouchRunLog(false, '', $fileUrl);
-                Log::WriteLog($fileUrl . "/RL.log", Log::RunLog($type, $data) . self::$comment . "\n");
+                Log::TouchRunLog(false, '', getRoot() . "/logs");
+                Log::WriteLog(getRoot() . "/logs/RL.log", Log::RunLog($type, $data) . self::$comment . "\n");
         }
         /**
          * 排序

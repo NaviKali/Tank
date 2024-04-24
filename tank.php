@@ -8,6 +8,7 @@ namespace tank;
 use config\SQL;
 use tank\Tool\Tool as Tool;
 use tank\Func\Func as Func;
+use tank\View\View;
 use tank\Request\Request;
 
 /**
@@ -266,10 +267,18 @@ if (!function_exists('stop')) {
 if (!function_exists("SQLConnect")) {
         function SQLConnect()
         {
-                match (SQL::$ConnectSQL['SQLType']) {
-                        'MongoDB' => \tank\MG\MG::Connect(),
-                        'MySQL' => \tank\SQL\MySQL::Connect(),
-                };
+                /**
+                 * 多数据库支持
+                 */
+                if (SQL::$ConnectSQL['SQLType'] != "All") {
+                        match (SQL::$ConnectSQL['SQLType']) {
+                                'MongoDB' => \tank\MG\MG::Connect(),
+                                'MySQL' => \tank\SQL\MySQL::Connect(),
+                        };
+                } else {
+                        \tank\MG\MG::Connect();
+                        \tank\SQL\MySQL::Connect();
+                }
         }
 }
 /**
@@ -301,4 +310,13 @@ if (!function_exists("getAutograph")) {
                 return apache_response_headers()["Autograph"];
         }
 }
-
+/**
+ * 视图层渲染
+ * TODO快速渲染HTML页面
+ */
+if (!function_exists("view")) {
+        function view(string $url, array $params = [])
+        {
+                View::Start($url, $params);
+        }
+}

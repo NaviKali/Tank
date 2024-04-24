@@ -468,19 +468,20 @@ class Tool
          * @param string $name 文件名字name-必填
          * @param string $suffix 文件后缀suffix-选填
          * @param string $data 写入文件的内容(空或最终结果)data-选填
+         * @param string $type 写入类型 选填 默认为 'w'
          */
-        public static function AutomaticFile(string $url, string $name, string $suffix = "", string $data = "")
+        public static function AutomaticFile(string $url, string $name, string $suffix = "", string $data = "",string $type = "w")
         {
                 $url = Tool::NotNull($url);
                 $name = Tool::NotNull($name);
                 if ($suffix == "") {
-                        $value = fopen($url . "/" . $name, "w"); //截加
+                        $value = fopen($url . "/" . $name, $type); //截加
                         $value = fwrite($value, $data); //写入
                         return $value;
                 } else {
                         $suffix_value = '.' . $suffix; //二次转换(后缀)twice change
                         $name_value = $name . $suffix_value; //拼接
-                        $value = fopen($url . "/" . $name_value, "w"); //截加
+                        $value = fopen($url . "/" . $name_value, $type); //截加
                         $value = fwrite($value, $data); //写入
                         return $value;
                 }

@@ -13,9 +13,9 @@ use function tank\LocationTo;
 class View
 {
         /* 页面包含 */
-        public static $ViewInclude = ["$-", "-$", "$(", ")$", "@for", "for@", "@-", "-@", "@if", "if@", "@~", "~@"];
+        public static $ViewInclude = ["$-", "-$", "$(", ")$", "@for", "for@", "@-", "-@", "@if", "if@", "@~", "~@","@foreach","foreach@"];
         /* 页面切换 */
-        public static $ViewChange = ["<?php\techo $", ";\t?>", "<?php\t", "\t?>", "<?php\tfor", "\t?>", "echo\t$", "\t;", "<?php\tif", "\t?>", "echo\t", "\t;"];
+        public static $ViewChange = ["<?php\techo $", ";\t?>", "<?php\t", "\t?>", "<?php\tfor", "\t?>", "echo\t$", "\t;", "<?php\tif", "\t?>", "echo\t$", "\t;","<?php\tforeach","\t?>"];
         /* 当前页面 */
         public static $view;
         /* 当前渲染页面 */
@@ -48,7 +48,7 @@ class View
         }
         /**
          * 引入页面
-         */
+         */     
         private static function IncludeView(array $TK): void
         {
                 $HTML_Content = file_get_contents(self::$viewPage);
