@@ -33,6 +33,15 @@ if (!function_exists('getRoot')) {
         }
 }
 /**
+ * 获取Public公共目录
+ */
+if (!function_exists('getPublicUrl')) {
+        function getPublicUrl()
+        {
+                return getRoot() . "/public";
+        }
+}
+/**
  * 获取视图层路径
  */
 if (!function_exists('getViewUrl')) {
