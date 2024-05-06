@@ -7,6 +7,7 @@ namespace tank\MD;
  */
 
 
+use tank\Error\httpError;
 use tank\MG\MG as MG;
 use tank\Tool\Tool;
 
@@ -75,7 +76,7 @@ class MD extends MG
          */
         protected function isOpenUserNameWriteField()
         {
-                $this::$UserNameWriteField ? ['field' =>self::$UserNameField,'value'=>self::$UserNameFieldValue]  : null;
+                $this::$UserNameWriteField ? ['field' => self::$UserNameField, 'value' => self::$UserNameFieldValue] : null;
         }
         /**
          * 判断是否定义Guid
@@ -106,29 +107,28 @@ class MD extends MG
         /**
          * 其余字段写入 -> 判定
          * TODO用来判断是否开启写入其余字段的时间戳。
+         * @throws httpError
          */
         protected function isOpenOtherWriteField()
         {
                 $is = !$this::$OpenOtherWriteField ? false : true;
                 if (!$is)
                         $this::$OtherWriteField == null;
-                //*默认写入其余字段
-                $this::$OtherWriteField = [
-                        "create" => self::$normalCreateField,
-                        "update" => self::$normalUpdateField,
-                ];
+                if (self::$OtherWriteField == [] and $is)
+                        throw new httpError("请定义其余字段写入!");
         }
         /**
          * 软删除 -> 判定
          * TODO用来判断是否开启模型层中的软删除功能。
+         * @throws httpError
          */
         protected function isOpenSoftDelete()
         {
                 $is = !$this::$OpenSoftDelete ? false : true;
                 if (!$is)
                         $this::$SoftDeleteField == null;
-                //*默认软删除字段
-                $this::$SoftDeleteField = $this::$normalSoftDeleteField;
+                if (self::$SoftDeleteField == null and $is)
+                        throw new httpError("请定义软删除字段!");
         }
         /**
          * 获取子类名
@@ -142,5 +142,5 @@ class MD extends MG
                 $this::$className = $className;
                 return $this;
         }
-    
+
 }
