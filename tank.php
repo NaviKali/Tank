@@ -24,6 +24,25 @@ if (!function_exists('getCurrentFunctionName')) {
         }
 }
 /**
+ * 获取文档Document目录
+ */
+if(!function_exists('getDocumentUrl'))
+{
+        function getDocumentUrl()
+        {
+                return getRoot() . "/document";
+        }
+}
+/**
+ * 获取Config目录
+ */
+if (!function_exists('getConfigUrl')) {
+        function getConfigUrl()
+        {
+                return getRoot() . "/config";
+        }
+}
+/**
  * 获取Root目录路径
  */
 if (!function_exists('getRoot')) {

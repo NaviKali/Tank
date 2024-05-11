@@ -481,7 +481,13 @@ class Tool
                 } else {
                         $suffix_value = '.' . $suffix; //二次转换(后缀)twice change
                         $name_value = $name . $suffix_value; //拼接
-                        $value = fopen($url . "/" . $name_value, $type); //截加
+                        if($type == "a"){
+                                $value = fopen($url . "/" . $name_value,"a"); //截加
+
+                        }else{
+                                $value = fopen($url . "/" . $name_value,"a"); //截加
+
+                        }
                         $value = fwrite($value, $data); //写入
                         return $value;
                 }
