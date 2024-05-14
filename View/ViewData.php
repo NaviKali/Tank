@@ -1,10 +1,32 @@
 <?php
+
 namespace tank\View;
 
 class ViewData
 {
+    /**
+     * 开始头包含
+     */
+    public static array $ViewStartHeaderInclude = ["[Start]", "[/Start]"];
+    /**
+     * 开始头切换
+     */
+    public static array $ViewStartHeaderChange = [
+        // static::$StartHeader,
+        '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>[DOCUMENT]</title>
+                [STYLE]
+        </head>
+        <body>',
+        "</body>\n
+        </html>",
+    ];
     /* 页面包含 */
-    public static $ViewInclude = [
+    public static array $ViewInclude = [
         "$-",
         "-$",
         "$(",
@@ -27,7 +49,7 @@ class ViewData
         ")%",
     ];
     /* 页面切换 */
-    public static $ViewChange = [
+    public static array $ViewChange = [
         "<?php\techo $",
         ";\t?>",
         "<?php\t",
@@ -52,7 +74,7 @@ class ViewData
     /**
      * 页面标签属性包含
      */
-    public static $StyleInclude = [
+    public static array $StyleInclude = [
         't-hidden',
         't-show',
         't-flex-center',
@@ -63,7 +85,7 @@ class ViewData
     /**
      * 页面标签属性切换
      */
-    public static $StyleChange = [
+    public static array $StyleChange = [
         "style='display:none'",
         "style='display:unset'",
         "style='align-items: center;align-content: center;justify-content: center;justify-items: center;text-align:center;'",
@@ -74,7 +96,7 @@ class ViewData
     /**
      * 函数标签包含
      */
-    public static $FunctionTagInclude =[
+    public static array $FunctionTagInclude = [
         "T-for(",
         "T-if(",
         "var(",
@@ -84,12 +106,11 @@ class ViewData
     /**
      * 函数标签切换
      */
-    public static $FunctionTagChange = [
+    public static array $FunctionTagChange = [
         "self::TFor(",
         "self::TIf(",
         "self::var(",
         "self::get(",
         ")",
     ];
-
 }

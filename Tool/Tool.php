@@ -1,4 +1,5 @@
 <?php
+
 namespace tank\Tool;
 
 use config\Code as CodeConfig;
@@ -38,16 +39,16 @@ class Tool
          * @param string $title 标题 必填
          * @param string $content 内容 必填
          */
-        public static function MakeContract(array $wh,string $title,string $content)
+        public static function MakeContract(array $wh, string $title, string $content)
         {
                 header("Content-type: image/jpg");
-                $img = imagecreatetruecolor($wh[0],$wh[1]);
-                $backgroundColor = imagecolorallocate($img,255,255,255);
-                $textColor = imagecolorallocate($img,0,0,0);
+                $img = imagecreatetruecolor($wh[0], $wh[1]);
+                $backgroundColor = imagecolorallocate($img, 255, 255, 255);
+                $textColor = imagecolorallocate($img, 0, 0, 0);
                 imagefill($img, 0, 0, $backgroundColor);
-                imagestring($img,10,20,20,$title,$textColor);
-                imagestring($img,2,40,60,$content,$textColor);
-                imagestring($img,2,$wh[0]-200,$wh[1]-60,"Place Write This:",$textColor);
+                imagestring($img, 10, 20, 20, $title, $textColor);
+                imagestring($img, 2, 40, 60, $content, $textColor);
+                imagestring($img, 2, $wh[0] - 200, $wh[1] - 60, "Place Write This:", $textColor);
                 imagejpeg($img);
                 imagedestroy($img);
         }
@@ -248,7 +249,6 @@ class Tool
                         $end = $model::create($data);
                         return Tool::msg(200, "新建成功！");
                 }
-
         }
         /**
          * 加密盐
@@ -461,6 +461,15 @@ class Tool
                 }
         }
         /**
+         * 写入文件["w"]
+         */
+        public static function WriteFile(string $url, string $data)
+        {
+                $value = fopen($url, "w"); //截加
+                $value = fwrite($value, $data); //写入
+                return $value;
+        }
+        /**
          * 自动生成文件->(指定url路径生成某种文件)
          * @author L
          * @access public
@@ -470,7 +479,7 @@ class Tool
          * @param string $data 写入文件的内容(空或最终结果)data-选填
          * @param string $type 写入类型 选填 默认为 'w'
          */
-        public static function AutomaticFile(string $url, string $name, string $suffix = "", string $data = "",string $type = "w")
+        public static function AutomaticFile(string $url, string $name, string $suffix = "", string $data = "", string $type = "w")
         {
                 $url = Tool::NotNull($url);
                 $name = Tool::NotNull($name);
@@ -481,11 +490,11 @@ class Tool
                 } else {
                         $suffix_value = '.' . $suffix; //二次转换(后缀)twice change
                         $name_value = $name . $suffix_value; //拼接
-                        if($type == "a"){
-                                $value = fopen($url . "/" . $name_value,"a"); //截加
+                        if ($type == "a") {
+                                $value = fopen($url . "/" . $name_value, "a"); //截加
 
-                        }else{
-                                $value = fopen($url . "/" . $name_value,"a"); //截加
+                        } else {
+                                $value = fopen($url . "/" . $name_value, "a"); //截加
 
                         }
                         $value = fwrite($value, $data); //写入
@@ -513,7 +522,7 @@ class Tool
         public static function FileRead(string $url)
         {
                 $file = fopen($url, 'r');
-                return fread($file,2560000);
+                return fread($file, 2560000);
         }
         /**
          * 获取本机IP地址->(获取本机IP地址)
@@ -621,7 +630,7 @@ class Tool
                                 break;
                         case 500:
                                 /**异常回调 */
-                                Error::create($msg,__FILE__,__LINE__);
+                                Error::create($msg, __FILE__, __LINE__);
                                 break;
                         default:
                                 /**异常回调 */
@@ -686,5 +695,4 @@ class Tool
                 $value = date("H:i:s", $timestamp); //转换成24小时制
                 return $value;
         }
-
 }

@@ -23,6 +23,10 @@ class View
         /* 携带参数 */
         public static $params;
         /**
+         * 头属性
+         */
+        public static $HeaderAttr;
+        /**
          * 视图层变量
          */
         public static $var = [];
@@ -32,10 +36,12 @@ class View
          * @access public
          * @param string $view 视图层 必填
          * @param array $params 携带参数 选填
+         * @param array $attr 头属性 选填
          */
-        public static function Start(string $view, array $params = [])
+        public static function Start(string $view, array $params = [], array $attr = [])
         {
-                self::$ViewConfig = require (getRoot() . "/config/view.php");
+                self::$ViewConfig = require(getRoot() . "/config/view.php");
+                self::$HeaderAttr = $attr;
                 //*切换类型
                 header("Content-Type:text/html");
                 $url = getRoot() . "views/";
@@ -58,6 +64,17 @@ class View
         {
 
                 $HTML_Content = file_get_contents(self::$viewPage);
+                /**
+                 * 开始头
+                 */
+                for ($i = 0; $i < count(ViewData::$ViewStartHeaderInclude); $i++) {
+                        $HTML_Content = str_replace(ViewData::$ViewStartHeaderInclude[$i], ViewData::$ViewStartHeaderChange[$i], $HTML_Content);
+                }
+                if (self::$HeaderAttr == []) {
+                        $HTML_Content = str_replace("[STYLE]", "", $HTML_Content);
+                } else {
+                        $HTML_Content = self::HeaderStartAttrChange($HTML_Content, self::$HeaderAttr);
+                }
                 /**
                  * 静态文件
                  */
@@ -90,8 +107,31 @@ class View
                         $HTML_Content = str_replace(ViewData::$FunctionTagInclude[$i], ViewData::$FunctionTagChange[$i], $HTML_Content);
                 }
 
-                Tool::AutomaticFile(getRoot() . "public/then", 'view', "html", $HTML_Content);
-                include (getRoot() . "public/then/view.html");
+                Tool::WriteFile(getRoot() . "public/then/view.html", $HTML_Content);
+                include(getRoot() . "public/then/view.html");
+        }
+        /**
+         * 开始头属性修改
+         */
+        private static function HeaderStartAttrChange(string $data, array $attr)
+        {
+                $str = "";
+                if (in_array("title", array_keys($attr)))
+                        $data = str_replace("[DOCUMENT]", $attr["title"], $data);
+                if (in_array("auto-refresh", array_keys($attr)))
+                        $str .= '<meta http-equiv="refresh" content="' . $attr["auto-refresh"] . '">'."\n".'';
+                if (in_array("author", array_keys($attr)))
+                        $str .= '<meta name="author" content="' . $attr["author"] . '">'."\n".'';
+                if (in_array("description", array_keys($attr)))
+                        $str .= '<meta name="description" content="' . $attr["description"] . '">'."\n".'';
+                if (in_array("keywords", array_keys($attr)))
+                        $str .= '<meta name="keywords" content="'.$attr["keywords"].'">'."\n".'';
+                if (in_array("base", array_keys($attr)))
+                        $str .= '<base href="'.$attr["base"].'" target="_blank">'."\n".'';
+
+                $data = str_replace("[STYLE]",$str,$data);
+
+                return $data;
         }
         /**
          * 获取当前级别页面
