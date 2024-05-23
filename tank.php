@@ -34,6 +34,16 @@ if(!function_exists('getDocumentUrl'))
         }
 }
 /**
+ * 获取常量语目录
+ */
+if(!function_exists("getConStantUrl"))
+{
+        function getConStantUrl()
+        {
+                return getRoot()."/constant";
+        }
+}
+/**
  * 获取Config目录
  */
 if (!function_exists('getConfigUrl')) {

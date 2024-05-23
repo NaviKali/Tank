@@ -92,8 +92,9 @@ class LocalhostSql
     /**
      * 添加数据
      * @access public
+     * @return void
      */
-    public function create()
+    public function create():void
     {
         Tool::AutomaticFile($this->SQLUrl, $this->table, $this->DataFileSuffix, $this->defineField, "a");
     }
