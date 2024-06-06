@@ -5,6 +5,8 @@ namespace tank\Web;
 use tank\Error\error as Error;
 use tank\Attribute\Attribute;
 use tank\Func\Func;
+use tank\MG\MG;
+use tank\Request\Request;
 use tank\Tool\Tool;
 
 class http
@@ -103,7 +105,7 @@ class http
                         $Class = $this::getCorrespondAppClass($App_file);
                 }
                 //调用对应函数
-                echo ((new $Class())->$App_function());
+                echo ((new $Class())->$App_function((new Request),(new MG())));
 
         }
         /**

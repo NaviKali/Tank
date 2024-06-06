@@ -772,7 +772,7 @@ class MG implements IMG
                 //?判断是否开启软删除
                 $filter = $this::$OpenSoftDelete == true ? $this->SelectDelete($this::$filter) : $this::$filter;
                 $this::IsClient();
-                $this::Logs("FUNCTION", __FUNCTION__);
+                $this::Logs("FUNCTION", "数据库".__FUNCTION__."|表:{$this::$CollectionName}");
                 $mongoDB = self::$mongoDB;
                 $collection = self::$CollectionName;
                 // 构建查询对象
