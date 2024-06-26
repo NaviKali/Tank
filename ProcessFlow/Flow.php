@@ -15,6 +15,9 @@ namespace tank\ProcessFlow;
  * @see in 进入路径 string
  * @see cd 进入路径 string
  * @see start 启动程序 string
+ * @see deletefile 删除文件 string
+ * @see deleteoc 删除文件夹 string
+ * @see mkdir 生成文件夹 string
  * @see @see 注解 string
  * @see @@ 注解 string
  */
@@ -60,6 +63,9 @@ class Flow extends FlowVoid
         "in" => "ToCd",
         "cd" => "ToCd",
         "start" => "ToStart",
+        "deletefile"=>"ToDeleteFile",
+        "deleteos"=>"ToDeleteOs",
+        "mkdir"=>"ToMkdir",
     ];
 
     /**

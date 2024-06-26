@@ -26,8 +26,7 @@ if (!function_exists('getCurrentFunctionName')) {
 /**
  * 获取文档Document目录
  */
-if(!function_exists('getDocumentUrl'))
-{
+if (!function_exists('getDocumentUrl')) {
         function getDocumentUrl()
         {
                 return getRoot() . "/document";
@@ -36,11 +35,10 @@ if(!function_exists('getDocumentUrl'))
 /**
  * 获取常量语目录
  */
-if(!function_exists("getConStantUrl"))
-{
+if (!function_exists("getConStantUrl")) {
         function getConStantUrl()
         {
-                return getRoot()."/constant";
+                return getRoot() . "/constant";
         }
 }
 /**
@@ -87,7 +85,7 @@ if (!function_exists("Weclome")) {
         function Weclome()
         {
                 header("Content-Type:text/html");
-                include (getRoot() . '/public/then/weclome.html');
+                include(getRoot() . '/public/then/weclome.html');
         }
 }
 /**
@@ -274,7 +272,7 @@ if (!function_exists("VerificationInclude")) {
          */
         function VerificationInclude(string $PHPName)
         {
-                return require (getRoot() . "app/verification/$PHPName.php");
+                return require(getRoot() . "app/verification/$PHPName.php");
         }
 }
 /**
@@ -329,7 +327,7 @@ if (!function_exists("OverallSituationErrorConfig")) {
                 error_reporting(0);
                 set_error_handler(function ($data, $content, $url, $line) {
                         if ($data != 0) {
-                                if (empty ($content)) {
+                                if (empty($content)) {
                                         $content = "暂时没有错误提示内容!";
                                 }
                                 \tank\Error\error::create($content, $url, $line);
@@ -353,8 +351,8 @@ if (!function_exists("getAutograph")) {
  * TODO快速渲染HTML页面
  */
 if (!function_exists("view")) {
-        function view(string $url, array $params = [])
+        function view(string $url, array $params = [], array $attr = [])
         {
-                View::Start($url, $params);
+                View::Start($url, $params, $attr);
         }
 }

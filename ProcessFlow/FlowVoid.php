@@ -99,12 +99,42 @@ abstract class FlowVoid
 
     /**
      * 转换注释
-     * @access public
+     * @access protected
      * @param string $data 数据 必填
      * @return void
      */
     final protected function ToRem(string $data): void
     {
         $this->MakeData[] = '@REM ' . $data . PHP_EOL;
+    }
+    /**
+     * 删除文件
+     * @access protected
+     * @param string $data 数据 必填
+     * @return void
+     */
+    final protected function ToDeleteFile(string $data): void
+    {
+        $this->MakeData[] = "del " . $data . PHP_EOL;
+    }
+    /**
+     * 删除文件夹
+     * @access protected
+     * @param string $data 数据 必填
+     * @return void
+     */
+    final protected function ToDeleteOs(string $data): void
+    {
+        $this->MakeData[] = "rd " . $data . PHP_EOL;
+    }
+    /**
+     * 生成文件夹
+     * @access protected
+     * @param string $data 数据 必填
+     * @return void
+     */
+    final protected function ToMkdir(string $data): void
+    {
+        $this->MakeData[] = "md " . $data . PHP_EOL;
     }
 }
