@@ -77,8 +77,6 @@ class Request
          */
         public static function param(): mixed
         {
-                if (!$_GET or $_GET == [])
-                        return Tool::Message(404, "没有携带任何参数！");
                 return $_GET ?? [];
         }
         /**

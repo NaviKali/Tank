@@ -38,7 +38,7 @@ class Func
                 $con = [];
                 for ($i = 0; $i < count($params); $i++) {
                         $params[$i] = explode('=', $params[$i]);
-                        $params[$i][1] = base64_decode($params[$i][1],true);
+                        $params[$i][1] = base64_decode($params[$i][1]);
                         $con[$params[$i][0]] = $params[$i][1];
                 }
                 return $con;
