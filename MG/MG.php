@@ -28,6 +28,10 @@ use function tank\getRoot;
 interface IMG
 {
         /**
+         * 分页
+         */
+        public function page(int $page, int $limit);
+        /**
          * 强制删除
          */
         public function forcedelete();
@@ -143,6 +147,8 @@ interface IMG
  */
 class MG implements IMG
 {
+        /**Options选项 */
+        private array $options = [];
         /* 最大添加次数 */
         private const MaxCreateBath = 10;
         /**
@@ -186,6 +192,11 @@ class MG implements IMG
          * 筛选字段
          */
         public static $field = [];
+        /**
+         * 定义索引
+         * @var array
+         */
+        public static $defineindex = [];
         /**
          * 限制长度
          */
@@ -287,6 +298,25 @@ class MG implements IMG
         public static $UserNameField = null;
         /**业务姓名字段值 */
         public static $UserNameFieldValue = null;
+        /**
+         * 创建索引
+         * @access public
+         * @param array $index 索引 必填
+         * @return void
+         */
+        protected function CreateIndex(array $index): void
+        {
+                $manager = self::$manager;
+                $index = [
+                        'name' => $index[0], //*索引名称
+                        'key' => [$index[1] => $index[2]]  //* 索引字段，1表示升序，-1表示降序
+                ];
+                $command = new MongoDBCommand([
+                        'createIndexes' => 'users', // 集合名称
+                        'indexes' => [$index]
+                ]);
+                $manager->executeCommand('testdb', $command);
+        }
         /**
          * 查询过滤
          * @access public
@@ -502,9 +532,6 @@ class MG implements IMG
         public function Join(string $assOutside, string $alikeFont)
         {
                 //!去除空格
-                // $alikeFont = str_replace("\n", "", $alikeFont);
-                // $alikeFont = str_replace("\t", "", $alikeFont);
-                // $alikeFont = str_replace(" ", "", $alikeFont);
                 $alikeFont = $this->DelOtherChar($alikeFont);
                 //*裁剪相同字段
                 $ArralikeFont = explode("=", $alikeFont);
@@ -760,6 +787,39 @@ class MG implements IMG
         }
 
         /**
+         * 查询其余操作验证
+         * @return void
+         */
+        private function SelectOtherControls(): void
+        {
+                //?判断是否走limit
+                if (isset($this->limit) and !isset($this->skip)) {
+                        $this->MGLimit();
+                }
+                //?判断是否走skip
+                else if (isset($this->skip) and !isset($this->limit)) {
+                        $this->MGSkip();
+                }
+                //?判断是否走limit和skip
+                else if (isset($this->limit) and isset($this->skip)) {
+                        $this->MGLimitAndSkip();
+                }
+        }
+        /**
+         * 分页
+         * TODO用来对列表进行分页操作
+         * @access public
+         * @param int $page 页数 必填
+         * @param int $limit 长度 必填
+         * @return self
+         */
+        public function page(int $page, int $limit): self
+        {
+                $this->options["limit"] = $limit;
+                $this->options["skip"] = ($page - 1) * $limit;
+                return $this;
+        }
+        /**
          * 查询数据
          * TODO用来查询最终结果。
          * @param bool $isGetCount 是否获取数据的总数 选填 默认为 false
@@ -772,32 +832,22 @@ class MG implements IMG
                 //?判断是否开启软删除
                 $filter = $this::$OpenSoftDelete == true ? $this->SelectDelete($this::$filter) : $this::$filter;
                 $this::IsClient();
-                $this::Logs("FUNCTION", "数据库".__FUNCTION__."|表:{$this::$CollectionName}");
+                $this::Logs("FUNCTION", "数据库" . __FUNCTION__ . "|表:{$this::$CollectionName}");
                 $mongoDB = self::$mongoDB;
                 $collection = self::$CollectionName;
+
+                $this->SelectOtherControls();
+
                 // 构建查询对象
-                $query = new Query($filter, ['projection' => $this::$field]);
+                $query = new Query($filter, array_merge(['projection' => $this::$field], $this->options));
                 // 执行查询
                 $cursor = self::$manager->executeQuery("{$mongoDB}.{$collection}", $query);
                 //?判断是否为空
                 if (!isset($cursor))
                         return [];
-                //?判断是否走limit
-                if (isset($this->limit) and !isset($this->skip)) {
-                        $this->MGLimit($cursor);
-                }
-                //?判断是否走skip
-                else if (isset($this->skip) and !isset($this->limit)) {
-                        $this->MGSkip($cursor);
-                }
-                //?判断是否走limit和skip
-                else if (isset($this->limit) and isset($this->skip)) {
-                        $this->MGLimitAndSkip($cursor);
-                }
-                //*如果没有走limit和skip
-                else {
-                        $this->documentContent = $cursor->toArray();
-                }
+
+                $this->documentContent = $cursor->toArray();
+
                 //?判断是否走了排序化操作
                 if (self::$order != []) {
                         $this->MGOrder();
@@ -822,51 +872,28 @@ class MG implements IMG
         }
         /**
          * MGLimitAndSkip
-         * @param mixed $cursor 传入的查询文档数据
+         * @return void
          */
-        private function MGLimitAndSkip(mixed $cursor)
+        private function MGLimitAndSkip(): void
         {
-                $All = $cursor->toArray();
-                //?判断limit是否超出范围
-                if ($this->limit > count($All))
-                        return Tool::abort("Limit长度出错！");
-                $con = [];
-                for ($i = $this->skip; $i < $this->limit; $i++) {
-                        array_push($con, $All[$i]);
-                }
-                //?判断是否超出范围
-                $this->documentContent = $con;
+                $this->options["limit"] = $this->limit;
+                $this->options["skip"] = $this->skip;
         }
         /**
          * MGSkip
-         * @param mixed $cursor 传入的查询文档数据
+         * @return void
          */
-        private function MGSkip(mixed $cursor)
+        private function MGSkip(): void
         {
-                $All = $cursor->toArray();
-                $con = [];
-                for ($i = $this->skip; $i < count($All); $i++) {
-                        array_push($con, $All[$i]);
-                }
-                //?判断是否超出范围
-                $this->documentContent = $con;
+                $this->options["skip"] = $this->skip;
         }
         /**
          * MGlimit
-         * @param mixed $cursor 传入的查询文档数据
+         *@return void
          */
-        private function MGLimit(mixed $cursor)
+        private function MGLimit(): void
         {
-                $All = $cursor->toArray();
-                //?判断limit是否超出范围
-                if ($this->limit > count($All))
-                        return Tool::abort("Limit长度出错！");
-                $con = [];
-                for ($i = 0; $i < $this->limit; $i++) {
-                        array_push($con, $All[$i]);
-                }
-                //?判断是否超出范围
-                $this->documentContent = $con;
+                $this->options["limit"] = $this->limit;
         }
         /**
          * MG排序
@@ -1091,24 +1118,18 @@ class MG implements IMG
         /**
          * 获取集合列表
          * @static
-         * @return Json
+         * @access public
+         * @return array
          */
-        public static function getCollectionList(): mixed
+        public static function getCollectionList(): array
         {
-                // 获取集合列表的命令
-                $command = new MongoDBCommand([
-                        'listCollections' => 1,
-                        'filter' => [], // 可选的过滤条件
-                        'nameOnly' => true, // 仅获取集合名称
-                ]);
-                // 执行命令获取集合列表
-                $cursor = self::$manager->executeCommand(self::$mongoDB, $command);
-                // 解析结果
-                $collections = current($cursor->toArray())->cursor->firstBatch;
-                // 输出集合列表
-                foreach ($collections as $collection) {
-                        return Tool::JSON(['data' => $collection]);
+                $data = [];
+                $manager = self::$manager;
+                $command = new MongoDBCommand(["listCollections" => 1]);
+                $cursor = $manager->executeCommand(self::$mongoDB, $command);
+                foreach ($cursor as $document) {
+                        $data[] = $document;
                 }
-
+                return $data;
         }
 }

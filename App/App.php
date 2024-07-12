@@ -44,6 +44,7 @@ class App
             header("Autograph:$class");//*签名
         endif;
 
+        $this->VerIsPublicFile();
         //?是否开启App场景化
         if (!$AppConfig["IsStartApp"]) {
             if ($AppConfig["AppParamsType"] == "GET")
@@ -52,6 +53,8 @@ class App
                 $this->AppBaseParams = Request::postparam();
             return;
         }
+
+
 
         //?是否为不可调用类
         $Autograph = getAutograph();
@@ -62,7 +65,7 @@ class App
                 \tank\Error\error::create("当前类不可调用!", __FILE__, __LINE__);
             }
         }
-        $this->VerIsPublicFile();
+        //?是否为入口文件
         if ($this->isPublicFile) {
             if ($AppConfig["AppParamsType"] == "GET") {
                 $this->AppBaseParams = Func::BaseDeCodeUrl();
@@ -75,6 +78,20 @@ class App
                 }
                 $post = array_combine($keys, $values);
                 $this->AppBaseParams = $post;
+            }
+
+            //?是否开启严格验证
+            if ($AppConfig["IsStartStrict"]) {
+                $type = [];
+                if ($AppConfig["AppParamsType"] == "GET")
+                    $type = Request::param();
+                if ($AppConfig["AppParamsType"] == "POST")
+                    $type = Request::postparam();
+                foreach ($type as $k => $v) {
+                    $regex = "/^[A-Za-z0-9+\/=-_]*$/";
+                    if (!preg_match($regex, base64_decode($v)))
+                        \tank\Error\error::create("Base解码错误!");
+                }
             }
         }
     }

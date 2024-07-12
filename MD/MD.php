@@ -29,6 +29,8 @@ class MD extends MG
         public static $normalUpdateField = "updatetime";
         /* 当前类名 */
         public static $className;
+        /* 定义索引 */
+        public static $defineindex = [];
         /* 写入字段 */
         public static $writefield;
         /* 定义filed字段显示 */
@@ -68,7 +70,20 @@ class MD extends MG
                 $this->isOpenSoftDelete(); //?判断是否开启软删除
                 $this->isOpenOtherWriteField(); //?判断是否开启写入其余字段
                 $this->isOpenUserNameWriteField();//?判断是否开启业务姓名写入
+                $this->IsDefineIndex();//?判断是否定义索引
                 (new MG($this::$className));//*实例化当前数据表
+        }
+        /**
+         * 判断是否定义索引
+         * TODO定义索引可以快速查询，减少时间成本
+         */
+        protected function IsDefineIndex()
+        {
+                if ($this::$defineindex == [])
+                        return;
+                if ($this::$defineindex != [] and count(self::$defineindex) != 3)
+                        return Tool::abort("定义索引[索引名称，索引字段，排序{1:升序,-1:降序}]");
+                $this->CreateIndex($this::$defineindex);
         }
         /**
          * 判断是否开启业务姓名写入
