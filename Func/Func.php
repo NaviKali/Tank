@@ -196,7 +196,7 @@ class Func
                                 $isNone = $ValueParams[$i] == "None" ? true : false;
                                 //?判断验证是否必填
                                 if ($arr_params[2] == "require") {
-                                        if (!isset($_GET[$arr_params[0]]) || $_GET[$arr_params[0]] == "")
+                                        if (empty($_GET[$arr_params[0]]) || $_GET[$arr_params[0]] == "")
                                                 return Tool::msg(500, "$arr_params[1] { $arr_params[0] }不能为空！");
                                 }
                                 if ($arr_params[2] == "unrequire") {
@@ -222,10 +222,10 @@ class Func
                                         //?判断是否为application/json
                                         if (Request::headers("Content-Type") == "application/json") {
                                                 $params = Request::postparam();
-                                                if (!isset($params[$arr_params[0]]))
+                                                if (empty($params[$arr_params[0]]))
                                                         return Tool::msg(500, "$arr_params[1] { $arr_params[0] }不能为空！");
                                         } else {
-                                                if (!isset($params[$arr_params[0]]))
+                                                if (empty($params[$arr_params[0]]))
                                                         return Tool::msg(500, "$arr_params[1] { $arr_params[0] }不能为空！");
                                         }
                                 }

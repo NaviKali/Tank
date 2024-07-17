@@ -73,8 +73,12 @@ class App
                 $post = Request::postparam();
                 $keys = array_keys($post);
                 $values = [];
+                $regex = "/^[A-Za-z0-9+\/=-_]*$/";
                 for ($v = 0; $v < count(array_values($post)); $v++) {
-                    array_push($values, base64_decode(array_values($post)[$v]));
+                    if (preg_match($regex, array_values($post)[$v]))
+                        array_push($values, base64_decode(array_values($post)[$v]));
+                    else
+                        array_push($values, array_values($post)[$v]);
                 }
                 $post = array_combine($keys, $values);
                 $this->AppBaseParams = $post;
@@ -112,10 +116,20 @@ class App
     }
     /**
      * 获取解码后的参数
+     * @access public
+     * @param bool $isGetValue 是否只拿Value 选填 默认为 false
      * @return array
      */
-    public function getAppParams(): array
+    public function getAppParams(bool $isGetValue = false): array
     {
+        if ($isGetValue) {
+            $data = [];
+            foreach ($this->AppBaseParams as $k => $v) {
+                $data[] = $v;
+            }
+            return $data;
+        }
+
         return $this->AppBaseParams;
     }
 }

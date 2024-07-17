@@ -129,7 +129,7 @@ class MD extends MG
                 $is = !$this::$OpenOtherWriteField ? false : true;
                 if (!$is)
                         $this::$OtherWriteField == null;
-                if (self::$OtherWriteField == [] and $is)
+                if ($this::$OtherWriteField == [] and $is)
                         throw new httpError("请定义其余字段写入!");
         }
         /**
@@ -142,7 +142,7 @@ class MD extends MG
                 $is = !$this::$OpenSoftDelete ? false : true;
                 if (!$is)
                         $this::$SoftDeleteField == null;
-                if (self::$SoftDeleteField == null and $is)
+                if ($this::$SoftDeleteField == null and $is)
                         throw new httpError("请定义软删除字段!");
         }
         /**
