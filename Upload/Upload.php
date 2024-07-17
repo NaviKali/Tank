@@ -52,7 +52,7 @@ class Upload
         public function __construct(public string $fileName = '', public string $fileType = '')
         {
                 $this->fileAddress = $this->fileName . '.' . $this->fileType;
-                $this->uploadConfig =  require_once getConfigUrl() . "/Upload.php";
+                $this->uploadConfig = require_once getConfigUrl() . "/Upload.php";
                 $this->disk = getRoot() . $this->uploadConfig["disk"];
                 $this->fileSuffixSupportType = $this->uploadConfig["fileSuffixSupportType"];
                 $this->VerFileType($this->fileType);
@@ -107,6 +107,7 @@ class Upload
         public function setFileSuffixSupportTypeList(array $type): Upload
         {
                 $this->fileSuffixSupportType = $type;
+                $this->VerFileType($this->fileType);
                 return $this;
         }
         /**
