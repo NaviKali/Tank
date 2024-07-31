@@ -50,9 +50,9 @@ class Dom
      * @access public
      * @param string $tag 标签 必填 
      * @param ?int $index 元素索引 选填 默认为 null 可为Null
-     * @return object|string
+     * @return object|string|array
      */
-    public function getTagElement(string $tag, ?int $index = null): object|string
+    public function getTagElement(string $tag, ?int $index = null): object|string|array
     {
         $this->DOM->loadHTML(file_get_contents($this->HtmlFile));
         $dom = $this->DOM->getElementsByTagName($tag)->length == 0 ? [] : $this->DOM->getElementsByTagName($tag);

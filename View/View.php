@@ -46,10 +46,10 @@ class View
                 header("Content-Type:text/html");
                 $url = getRoot() . "views/";
                 self::$view = $view;
-                self::$viewPage = $url . $view . ".html";
+                self::$viewPage = $url . $view . ".php";
                 //?判断html是否存在
                 if (!file_exists(self::$viewPage)) {
-                        return Error::create("HTML不存在!", __FILE__, __LINE__);
+                        return Error::create("视图层PHP文件不存在!", __FILE__, __LINE__);
                 }
                 //*加载参数
                 $TK = $params;
