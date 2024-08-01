@@ -3,6 +3,7 @@
 namespace tank\View;
 
 use tank\Error\error as Error;
+use tank\Request\Request;
 use tank\Tool\Tool;
 use tank\View\ViewData;
 use function tank\Abort;
@@ -40,7 +41,7 @@ class View
          */
         public static function Start(string $view, array $params = [], array $attr = [])
         {
-                self::$ViewConfig = require(getRoot() . "/config/view.php");
+                self::$ViewConfig = require (getRoot() . "/config/view.php");
                 self::$HeaderAttr = $attr;
                 //*切换类型
                 header("Content-Type:text/html");
@@ -56,6 +57,26 @@ class View
                 //*引入渲染页面
                 self::IncludeView($params);
                 return;
+        }
+        /**
+         * 媒体查询相应式视图层
+         * !记住，前端也要进行配合
+         * *根据GET的mediaType参数来进行跳转
+         * @access public
+         * @static
+         * @param array ...$view 视图层格式 [[视图名，额外参数{里面必须带有view字段->[width宽度,to跳转]},其余属性]]
+         */
+        public static function MediaView(array ...$view): void
+        {
+                if (!isset(Request::param()["mediaType"]))
+                        self::Start($view[0][0][0], $view[0][0][1], $view[0][0][2]);
+                foreach ($view as $view_k => $view_v) {
+                        foreach ($view_v as $k => $v) {
+                                if (isset(Request::param()["mediaType"]) and Request::param()["mediaType"] == $v[0]) {
+                                        self::Start($v[0],$v[1],$v[2]);
+                                }
+                        }
+                }
         }
         /**
          * 引入页面
@@ -108,7 +129,7 @@ class View
                 }
 
                 Tool::WriteFile(getRoot() . "public/then/view.html", $HTML_Content);
-                include(getRoot() . "public/then/view.html");
+                include (getRoot() . "public/then/view.html");
         }
         /**
          * 开始头属性修改
@@ -119,17 +140,17 @@ class View
                 if (in_array("title", array_keys($attr)))
                         $data = str_replace("[DOCUMENT]", $attr["title"], $data);
                 if (in_array("auto-refresh", array_keys($attr)))
-                        $str .= '<meta http-equiv="refresh" content="' . $attr["auto-refresh"] . '">'."\n".'';
+                        $str .= '<meta http-equiv="refresh" content="' . $attr["auto-refresh"] . '">' . "\n" . '';
                 if (in_array("author", array_keys($attr)))
-                        $str .= '<meta name="author" content="' . $attr["author"] . '">'."\n".'';
+                        $str .= '<meta name="author" content="' . $attr["author"] . '">' . "\n" . '';
                 if (in_array("description", array_keys($attr)))
-                        $str .= '<meta name="description" content="' . $attr["description"] . '">'."\n".'';
+                        $str .= '<meta name="description" content="' . $attr["description"] . '">' . "\n" . '';
                 if (in_array("keywords", array_keys($attr)))
-                        $str .= '<meta name="keywords" content="'.$attr["keywords"].'">'."\n".'';
+                        $str .= '<meta name="keywords" content="' . $attr["keywords"] . '">' . "\n" . '';
                 if (in_array("base", array_keys($attr)))
-                        $str .= '<base href="'.$attr["base"].'" target="_blank">'."\n".'';
+                        $str .= '<base href="' . $attr["base"] . '" target="_blank">' . "\n" . '';
 
-                $data = str_replace("[STYLE]",$str,$data);
+                $data = str_replace("[STYLE]", $str, $data);
 
                 return $data;
         }
