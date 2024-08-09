@@ -91,7 +91,7 @@ class Drive
      */
     public function Has(string $drivename): mixed
     {
-        return in_array($drivename, $this->DriveList) ? true : false;
+        return in_array($drivename, $this->DriveList['start']) ? true : (in_array($drivename, $this->DriveList['close']) ? true : false);
     }
     /**
      * 是否开启某一个或某一些驱动
