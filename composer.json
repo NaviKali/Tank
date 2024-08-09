@@ -1,16 +1,18 @@
 {
-    "name": "tankphp/tank",
-    "description": "Tank框架是一个由PHP后端语言操作MongoDB数据库的框架。",
-    "autoload": {
-        "psr-4": {
-            "Tankphp\\Tank\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "tankphp"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+  "version": "3",
+  "require": {
+    "tankphp/tank": "dev-main",
+    "mongodb/mongodb": "^1.12.0",
+    "phpoffice/phpexcel": "1.8",
+    "predis/predis": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\": "app",
+      "public\\": "public",
+      "config\\": "config",
+      "router\\": "router",
+      "tank\\": "tank"
+    }
+  }
 }
