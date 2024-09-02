@@ -8,7 +8,7 @@ use tank\Error\httpError;
  * @author LL
  */
 
-include ('../../config/Database.php');
+include('../../config/Database.php');
 use config\SQL as SQL;
 use MongoDB\Driver\Manager as Manager;
 use MongoDB\Driver\Exception as DriverException;
@@ -299,6 +299,27 @@ class MG implements IMG
         /**业务姓名字段值 */
         public static $UserNameFieldValue = null;
         /**
+         * Tank支持操作
+         */
+        public array $TankOfDo = [
+                'useTankDictionary' => [],
+        ];
+        /**
+         * 使用Tank字典
+         * @access public
+         * @param string|array $index string->获取key array->获取value
+         * @param string $field 字段 选填 如果要获取key就填写。
+         * @return self
+         */
+        public function useTankDictionary(string|array $index, array $field = []): self
+        {
+                if (is_string($index))
+                        $this->TankOfDo["useTankDictionary"] = ["type" => "key", "main" => ["dic" => $index, "field" => $field]];
+                if (is_array($index))
+                        $this->TankOfDo["useTankDictionary"] = ["type" => "value", ["main"] => ["field" => $index]];
+                return $this;
+        }
+        /**
          * 创建索引
          * @access public
          * @param array $index 索引 必填
@@ -485,7 +506,7 @@ class MG implements IMG
         private function AutoWriteGuid(array $data)
         {
                 //*获取Guid后转码
-                $GuidValue = Tool::AutomaticID($data[$this::$Guid[1]]);
+                $GuidValue = Tool::AutomaticID(date("Y-m-d-H.i:s") . $data[$this::$Guid[1]]);
                 $data[$this::$Guid[0]] = $GuidValue; //*添加Guid字段
                 return $data;
         }
@@ -856,6 +877,21 @@ class MG implements IMG
                 if ($this::$isJoin) {
                         return $isGetCount ? $this->Count() : $this::$JoinValue;
                 }
+
+                //?是否启动Tank字典
+                if ($this->TankOfDo["useTankDictionary"] != []) {
+                        $useDictionary = $this->TankOfDo["useTankDictionary"];
+                        if ($useDictionary["type"] == "key") {
+                                $dic = $useDictionary["main"]["dic"];
+                                $field = $useDictionary["main"]["field"];
+                                foreach ($this->documentContent as $k => $v) {
+                                        foreach ($field as $field_k => $field_v) {
+                                                $v->$field_v = (new \tank\Admin\LocalhostDictionary())->getKey($dic, $v->$field_v);
+                                        }
+                                }
+                        }
+                }
+
                 //*查询后函数
                 $this::onAfterSelect();
                 //*返回最终所有值

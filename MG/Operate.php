@@ -2,6 +2,7 @@
 
 namespace tank\MG;
 
+use config\Code;
 use Error;
 use tank\Cookie\Cookie;
 use tank\MG\MG as Mongo;
@@ -80,7 +81,7 @@ class Operate
                 $token = Request::headers('Token');
                 $find = (new MG('token'))->comment('Token验证.')->where(['token_value' => $token])->select();
                 if (!$find) {
-                        Error("登录超时!", function: "Token验证");
+                        print_r(Code::Code(502, "登录超时!", [], __FUNCTION__));
                         return die();
                 }
                 MG::$filter = [];//*初始化过滤内容

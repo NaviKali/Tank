@@ -4,8 +4,11 @@ namespace tank\Func;
 use tank\MG\MG;
 use tank\Request\Request;
 use tank\Tool\Tool as Tool;
+use app\model\Token as ModelToken;
 use tank\App\App;
 use function tank\{Error, Success};
+use tank\BaseController;
+use tank\MG\Operate;
 
 /**
  * 路由参数调用方法函数。
@@ -31,7 +34,7 @@ class Func
         public static function BaseDeCodeUrl()
         {
                 $params = $_SERVER['QUERY_STRING'];
-                if (empty($params)){
+                if (empty($params)) {
                         return [];
                 }
                 $params = explode("&", $params);
@@ -159,18 +162,43 @@ class Func
          */
         private static function VerLOGINTypes(array $loginField, bool $isGetToken, string $model = 'login')
         {
-                $param = Request::param();
+                $param = Request::postparam();
                 $con = [];
                 for ($i = 0; $i < count($loginField); $i++) {
                         $con[$loginField[$i]] = $param[$loginField[$i]];
                 }
+
+                //?验证账号密码是否正确
+                $findAccount = (new MG("login"))->where($con)->Once();
+                if (!$findAccount)
+                        return Error("账号密码错误！");
+
+                //?验证Token是否存在
+                $findToken = (new MG("token"))->where(["by_guid" => $findAccount["login_guid"]])->Once();
+                if (!$findToken) {
+                        $exportTime = new \DateTime(); // 获取当前时间
+                        $exportTime->modify('+2 day'); // 添加一天
+                        $exportTime = $exportTime->format('y.m.d-H.i:s'); // 转换为时间格式
+                        (new ModelToken())->Modelcreate([Operate::MakeToken(), $findAccount["login_guid"], 1, $exportTime]);
+                }
+
+                //?如果Token存在
+                //!刷掉Token，即异地登录 | 冲突登录
+                (new MG('token'))->where(["by_guid" => $findAccount["login_guid"]])->update([
+                        'token_value' => Operate::MakeToken()
+                ]);
+
                 //?判断是否要求获取Token
-                $token = $isGetToken ? (new MG('token'))->Once()['token_value'] : null;
+                $token = $isGetToken ? (new MG("token"))->where(["by_guid" => $findAccount["login_guid"]])->Once()['token_value'] : null;
                 // 查找单条数据 
                 $find = (new MG($model))->where($con)->Once();
                 $find["token"] = $token; //*给予Token  值/null
                 if (!$find)
                         return Error("登录失败!");
+                /** 
+                 * 存储登录信息
+                 */
+                $_SESSION["Login"] = $find;
                 return Success("登录成功!", $find);
         }
 

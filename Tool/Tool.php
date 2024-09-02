@@ -546,10 +546,10 @@ class Tool
                 $type = Tool::NotNull($type);
                 switch ($type) {
                         case 'New':
-                                $value = date('y.m.d-H.i:s');
+                                $value = date('Y.m.d-H.i:s');
                                 return $value;
                         case 'Year':
-                                $value = date('y.m.d');
+                                $value = date('Y.m.d');
                                 return $value;
                         case 'Day':
                                 $value = date('H.i:s');

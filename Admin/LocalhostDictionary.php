@@ -80,6 +80,24 @@ class LocalhostDictionary
         return $valueArr;
     }
     /**
+     * 读取某一个dic字典里面所有字典内容
+     * @access public
+     * @param string $filename dic文件名称 必填
+     * @return array
+     */
+    public function ReadFileDic(string $filename): array
+    {
+        $arr = [];
+        foreach (file(getRoot() . "dictionary/$filename.dic") as $k => $filevalue) {
+            array_push($arr, $filevalue);
+        }
+        $valueArr = [];
+        foreach ($arr as $k => $v) {
+            $valueArr[explode(":", $v)[0]] = explode(":", $v)[1];
+        }
+        return $valueArr;
+    }
+    /**
      * 是否存在指定目录
      * @access private
      * @return bool
@@ -92,4 +110,22 @@ class LocalhostDictionary
             return false;
         }
     }
+    /**
+     * 获取某一个dic字典文件下面的key
+     * @access public
+     * @param string $dicname dic文件名 必填
+     * @param string $value 值 必填
+     * @return string
+     */
+    public function getKey(string $dicname, string $value): string
+    {
+        $arr = $this->ReadFileDic($dicname);
+        $key = '';
+        foreach ($arr as $k => $v) {
+            if ($v == $value)
+                $key = $k;
+        }
+        return $key;
+    }
+
 }

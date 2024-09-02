@@ -99,8 +99,8 @@ class ViewData
     public static array $FunctionTagInclude = [
         "T-for(",
         "T-if(",
-        "var(",
-        "get(",
+        "t-var(",
+        "t-get(",
         ")",
     ];
     /**
