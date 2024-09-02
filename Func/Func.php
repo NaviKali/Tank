@@ -1,4 +1,5 @@
 <?php
+
 namespace tank\Func;
 
 use tank\MG\MG;

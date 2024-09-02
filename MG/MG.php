@@ -1,4 +1,5 @@
 <?php
+
 namespace tank\MG;
 
 use tank\Error\httpError;

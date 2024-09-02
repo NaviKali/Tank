@@ -2,6 +2,7 @@
 /**
  * 本地字典
  */
+
 namespace tank\Admin;
 
 use tank\Env\env;

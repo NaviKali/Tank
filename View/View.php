@@ -1,5 +1,6 @@
 <?php
 
+
 namespace tank\View;
 
 use tank\Error\error as Error;
