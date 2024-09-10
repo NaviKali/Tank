@@ -34,7 +34,7 @@ class Func
          */
         public static function BaseDeCodeUrl()
         {
-                $params = $_SERVER['QUERY_STRING'];
+                $params = $_SERVER['QUERY_STRING'] ?? [];
                 if (empty($params)) {
                         return [];
                 }
