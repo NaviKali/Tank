@@ -35,11 +35,12 @@ class Operate
         /**
          * UUID码(用户识别器)
          * TODO这个UUID是用来进行管理员Cookie验证的。
+         * @param mixed $value Cookie制 选填 默认为 ''
          * @return void
          */
-        public static function UUID(): void
+        public static function UUID(mixed $value = ''): void
         {
-                Cookie::SetCookie(getAPPJSON()->COOKIE->UUID->NAME, uniqid(), getAPPJSON()->COOKIE->UUID->TIME);
+                Cookie::SetCookie(getAPPJSON()->COOKIE->UUID->NAME, $value, getAPPJSON()->COOKIE->UUID->TIME);
         }
         /**
          * GUID式编译乱码(不可逆)

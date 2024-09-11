@@ -869,7 +869,7 @@ class MG implements IMG
                         return [];
 
                 $this->documentContent = $cursor->toArray();
-
+                
                 //?判断是否走了排序化操作
                 if (self::$order != []) {
                         $this->MGOrder();
@@ -1129,7 +1129,6 @@ class MG implements IMG
                         self::$mongoDB = $dbName;
                         //连接成功
                         self::$ClientStatus = true;
-
                 } catch (DriverException $e) {
                         //连接失败
                         self::$ClientStatus = false;

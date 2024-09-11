@@ -8,6 +8,7 @@ use tank\Func\Func;
 use tank\Request\Request;
 use tank\Web\http;
 use function tank\{getRoot, getAutograph};
+use tank\Error\httpError;
 
 class App
 {
@@ -32,9 +33,13 @@ class App
      */
     public function __construct(mixed $class)
     {
-        $AppConfig = require (getRoot() . "config\\App.php");
+        $AppConfig = require(getRoot() . "config\\App.php");
 
         $this->AppCode = $AppConfig["AppCode"];
+
+        //!代参禁止访问接口
+        if ($this->AppCode == 404)
+            throw new httpError("接口禁止访问！");
 
         $this->NotCallClassList = $AppConfig["AppNotCallClass"];
 
@@ -45,28 +50,28 @@ class App
         endif;
 
         $this->VerIsPublicFile();
-        //?是否开启App场景化
-        if (!$AppConfig["IsStartApp"]) {
-            if ($AppConfig["AppParamsType"] == "GET")
-                $this->AppBaseParams = Request::param();
-            if ($AppConfig["AppParamsType"] == "POST")
-                $this->AppBaseParams = Request::postparam();
-            return;
-        }
 
-
-
-        //?是否为不可调用类
-        $Autograph = getAutograph();
-        for ($v = 0; $v < count($AppConfig["AppNotCallClass"]); $v++) {
-            if (
-                $Autograph == md5($AppConfig["AppNotCallClass"][$v])
-            ) {
-                \tank\Error\error::create("当前类不可调用!", __FILE__, __LINE__);
-            }
-        }
-        //?是否为入口文件
         if ($this->isPublicFile) {
+            //?是否开启App场景化
+            if (!$AppConfig["IsStartApp"]) {
+                if ($AppConfig["AppParamsType"] == "GET")
+                    $this->AppBaseParams = Request::param();
+                if ($AppConfig["AppParamsType"] == "POST")
+                    $this->AppBaseParams = Request::postparam();
+                return;
+            }
+
+
+            //?是否为不可调用类
+            $Autograph = getAutograph();
+            for ($v = 0; $v < count($AppConfig["AppNotCallClass"]); $v++) {
+                if (
+                    $Autograph == md5($AppConfig["AppNotCallClass"][$v])
+                ) {
+                    \tank\Error\error::create("当前类不可调用!", __FILE__, __LINE__);
+                }
+            }
+            //?是否为入口文件
             if ($AppConfig["AppParamsType"] == "GET") {
                 $this->AppBaseParams = Func::BaseDeCodeUrl();
             } else if ($AppConfig["AppParamsType"] == "POST") {
