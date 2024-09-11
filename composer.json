@@ -3,7 +3,7 @@
   "name":"tankphp/tank",
   "description":"这是一个使用PHP操作MongoDB数据库的框架",
   "require": {
-    "mongodb/mongodb": "^1.13.0"
+    "tankphp/tank": "dev-main"
   },
   "autoload": {
     "psr-4": {
