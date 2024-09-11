@@ -1,5 +1,6 @@
 {
   "version": "4",
+  "name":"tankphp/tank",
   "require": {
     "tankphp/tank": "dev-main",
     "mongodb/mongodb": "^1.12.0"
