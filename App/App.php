@@ -33,7 +33,7 @@ class App
      */
     public function __construct(mixed $class)
     {
-        $AppConfig = require(getRoot() . "config\\App.php");
+        $AppConfig = require(getRoot() . "config/App.php");
 
         $this->AppCode = $AppConfig["AppCode"];
 

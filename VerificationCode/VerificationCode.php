@@ -5,6 +5,7 @@
 namespace tank\VerificationCode;
 
 use tank\Attribute\Attribute;
+use tank\Seesion\Session;
 
 
 class VerificationCode
@@ -57,7 +58,7 @@ class VerificationCode
      */
     public static function VerVerificationCode(string $code): bool
     {
-        return self::$Code == $code ? true : false;
+        return @$_SESSION['code'] == $code ? true : false;
     }
     /**
      * 发送验证码消息
@@ -66,11 +67,11 @@ class VerificationCode
      * @param int $wait 等待时间 选填 默认为 1
      * @return string
      */
-    public static function SendVerificationCode(int $wait = 1):string
+    public static function SendVerificationCode(int $wait = 1): string
     {
-            sleep($wait);
-            self::getRandomCode();
-            return self::$Code;
+        sleep($wait);
+        self::getRandomCode();
+        return self::$Code;
     }
     /**
      * 获取随机验证码
@@ -88,5 +89,6 @@ class VerificationCode
         $end = str_shuffle($end);
 
         self::$Code = $end;
+        (new Session)->CreateSession("code", $end);
     }
 }

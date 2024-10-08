@@ -11,6 +11,35 @@ use tank\Tool\Tool;
 class Request
 {
         /**
+         * 获取模型层下指定需求写入字段参数
+         * @access public
+         * @static
+         * @param string $model 模型层名称 必填
+         * @param string $type 模型层类型 选填 默认为 get
+         * @return array
+         */
+        public static function getModelParam(string $model, string $type = 'get'): array
+        {
+                $data = [];
+                $getModel = "\app\model\\$model";
+                $field = array_keys($getModel::$writefield);
+                if ($type == 'get') {
+                        $params = self::param();
+                        foreach ($params as $k => $v) {
+                                if (in_array($k, $field))
+                                        $data[$k] = $v;
+                        }
+                }
+                if ($type == 'post') {
+                        $params = self::postparam();
+                        foreach ($params as $k => $v) {
+                                if (in_array($k, $field))
+                                        $data[$k] = $v;
+                        }
+                }
+                return $data;
+        }
+        /**
          * 获取POST参数
          * @access public
          * @static
@@ -30,7 +59,7 @@ class Request
                         return (array) $post;
                 } else {
                         // if (!$_POST or $_POST == [])
-                                // return Tool::Message(404, "没有携带任何参数！");
+                        // return Tool::Message(404, "没有携带任何参数！");
                         return $_POST ?? [];
                 }
         }
@@ -120,7 +149,14 @@ class Request
          */
         public static function response(string $responsename = ''): mixed
         {
-                return empty($responsename) ? apache_response_headers() : apache_response_headers()[$responsename] ?? null;
+                // return empty($responsename) ? apache_response_headers() : apache_response_headers()[$responsename] ?? null;
+                $response = headers_list();
+                $data = [];
+                foreach ($response as $k => $v) {
+                        $slice = explode(":", $v);
+                        $data[$slice[0]] = $slice[1];
+                }
+                return $data;
         }
 
 
